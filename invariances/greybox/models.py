@@ -160,11 +160,9 @@ class ResnetClassifier(AbstractGreybox):
                                       default="resnet50_trained_on_SIN_and_IN_then_finetuned_on_IN")
             self.logger.info("Loading {} from url {}".format(which_stylized, style_model_urls[which_stylized]))
             assert not finetune, 'Not possible for now (eccv2020)'
-            #state = torch.load('/export/home/rrombach/.cache/torch/checkpoints/resnet50_finetune_60_epochs_lr_decay_after_30_start_resnet50_train_45_epochs_combined_IN_SF-ca06340c.pth.tar')
             url = style_model_urls[which_stylized]
             state = model_zoo.load_url(url)
             # remove the .module in keys of state dict (from DataParallel)
-            # https://discuss.pytorch.org/t/solved-keyerror-unexpected-key-module-encoder-embedding-weight-in-state-dict/1686
             state_unboxed = dict()
             for k in tqdm(state["state_dict"].keys(), desc="StateDict"):
                 state_unboxed[k[7:]] = state["state_dict"][k]
@@ -198,7 +196,7 @@ class ResnetClassifier(AbstractGreybox):
 
     def encode(self, x):
         x = self._pre_process(x)
-        for i in range(len(self.layers)):
+        for i in range(len(self.layers)+1):
             if i != self.split_at:
                 x = self.layers[i](x)
             else:
@@ -210,7 +208,9 @@ class ResnetClassifier(AbstractGreybox):
         return x
 
     def return_features(self, x):
-        """returns intermediate features and logits. Could also add softmaxed class decisions.
+        """
+        TODO: not really necessary, remove?
+        returns intermediate features and logits. Could also add softmaxed class decisions.
 
         For Resnet-101, the following sizes are returned (11 is batch-size and can be ignored,
         the ones marked with an 'x' were used in the paper.):

@@ -1,0 +1,45 @@
+experiment_name: alexnet_to_ae_fc6_animals
+
+datasets:
+  train: autoencoders.data.ImageNetAnimalsTrain
+  validation: autoencoders.data.ImageNetAnimalsValidation
+
+iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
+loss: iin.losses.iin.Loss
+
+# the greybox one wants to analyze
+GreyboxModel:
+  split_idx: 18
+  model: invariances.greybox.models.AlexNetClassifier
+  subconfig:
+    Model:
+      pretrained: True
+
+# the conditional INN
+model: invariances.model.cinn.ConditionalTransformer
+Transformer:
+    hidden_depth: 2
+    in_channels: 128
+    mid_channels: 1024
+    n_flows: 20
+    conditioning_in_channels: 4096
+    conditioning_spatial_size: 1
+    embedder_down: 3
+    activation: "none"
+    conditioning_option: "none"
+
+# other hyperparameters
+base_learning_rate: 4.5e-06
+batch_size: 16
+num_steps: 250000
+log_freq: 1000
+
+# the autoencoder model for visualization
+AutoencoderModel:
+  pretrained_ae_key: "bigae_animals"
+
+# fid-score calculation
+fid:
+  batch_size: 20
+fid_stats:
+  pre_calc_stat_path: /fid_stats/animals128

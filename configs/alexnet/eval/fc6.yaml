@@ -1,4 +1,4 @@
-experiment_name: alexnet_to_ae_fc6_animals
+experiment_name: alexnet_to_ae_fc6_animals_eval
 
 iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
 loss: iin.losses.iin.Loss     #  only relevant for training, calculates the negative log-likelihood

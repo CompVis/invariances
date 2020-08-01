@@ -1,0 +1,19 @@
+name: invariances
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.7
+  - pip=19.3
+  - cudatoolkit=10.1
+  - pytorch=1.4
+  - torchvision=0.5
+  - numpy=1.18
+  - pip:
+    - git+https://github.com/pesser/edflow.git@711a728c7afc50a88017bc37213fbe485fc13efe#egg=edflow[full]
+    - -e git+https://github.com/rromb/fid.git@e6deef55cdb56944a540c3d74739438111292ec8#egg=fid-callback
+    - -e git+https://github.com/edflow/autoencoders.git@master#egg=autoencoders
+    - -e git+https://github.com/CompVis/iin.git@master#egg=iin
+    - albumentations==0.4.3
+    - opencv-python==4.1.2.30
+    - pudb==2019.2

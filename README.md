@@ -16,8 +16,7 @@ Table of Contents
 =================
 
 * [Requirements](#requirements)
-    * [The `autoencoders` package](#`autoencoders`)
-    * [The `iin` package](#`iin`)
+* [Demos](#demos)
 * [Data](#data)
 * [Training](#training)
    * [Conditional INNs](#conditional-inns)
@@ -39,12 +38,17 @@ conda activate invariances
 
 Optionally, you can then also `conda install tensorflow-gpu=1.14` to speed up
 FID evaluations.
-### The `autoencoders` package
-Some description here.
-### The `iin` package
-Some description here. 
 
-# TODO: from here iin readme
+## Demos
+### Feature Visualization
+To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
+run 
+```
+streamlit run invariances/demo.py
+```
+### Adversarial Attacks
+coming soon
+# TODO: from here iin readme - adopt
 ## Data -- TODO
 `MNIST`, `FashionMNIST` and `CIFAR10` will be downloaded automatically the
 first time they are used and `CelebA` will prompt you to download it. The

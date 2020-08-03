@@ -27,11 +27,6 @@ class AutoencoderConcatTrainer(Trainer):
     def init_greybox(self, config):
         """Initializes a provided 'Greybox', i.e. a model one wants to interpret/analyze."""
         self.greybox = get_obj_from_str(config["model"])(config)
-        if "checkpoint" in config:
-            checkpoint = config["checkpoint"]
-            state = torch.load(checkpoint)["model"]
-            self.greybox.load_state_dict(state)
-            self.logger.info("Restored greybox from {}".format(checkpoint))
         self.greybox.to(self.device)
         self.greybox.eval()
 
@@ -44,7 +39,6 @@ class AutoencoderConcatTrainer(Trainer):
             self.logger.info("Loaded autoencoder {} from 'autoencoders'".format(ae_key))
         else:
             # in case you want to use a checkpoint different from the one provided.
-            # todo: really need this?
             subconfig = config["subconfig"]
             self.autoencoder = get_obj_from_str(config["model"])(subconfig)
             if "checkpoint" in config:
@@ -59,11 +53,6 @@ class AutoencoderConcatTrainer(Trainer):
         with torch.no_grad():
             # reconstruction
             zz, _ = self.model(zae, zrep)
-            zae_rec = self.model.reverse(zz, zrep)
-            # sanity check:
-            if torch.norm(zae - zae_rec) > 1e-2:
-                self.logger.info(
-                    "Warning: INN might be broken. Reconstruction norm is: {}".format(torch.norm(zae - zae_rec)))
             # samples
             log = dict()
             for n in range(self.log_n_samples):
@@ -74,12 +63,9 @@ class AutoencoderConcatTrainer(Trainer):
 
             # autoencoder reconstruction without inn
             xae_rec = self.autoencoder.decode(zae)
-            # autoencoder reconstruction with inn
-            xae_rec_inn = self.autoencoder.decode(zae_rec)
             # samples from the autoencoder
             ae_sample = self.autoencoder.decode(zz_sample)
             log["reconstructions"] = self.tonp(xae_rec)
-            log["reconstructions_inn"] = self.tonp(xae_rec_inn)
             log["autoencoder_sample"] = self.tonp(ae_sample)
             log["inputs"] = self.tonp(xin)
         return log
@@ -136,6 +122,7 @@ class AutoencoderConcatTrainer(Trainer):
 
 
 class VisualizeAttacks(AutoencoderConcatTrainer):
+    # TODO: the "logits" part might be tricky -- check with the softmax
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.epsilon = retrieve(self.config, "Attack/epsilon",

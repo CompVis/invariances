@@ -105,10 +105,11 @@ def visualize(ex, config):
 if __name__ == "__main__":
     from autoencoders.data import Folder
 
-    dset = Folder({"Folder": {"folder":
-                                  "data/custom",
-                              "size": 128}
-                   })
+    dset = Folder({"Folder":{
+                        "folder": "data/custom",
+                        "size": 128}
+                 })
+
     dataidx = st.slider("data index", 0, len(dset), 0)
     example = dset[dataidx]
     visualize(example, None)

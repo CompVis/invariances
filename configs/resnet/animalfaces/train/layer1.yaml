@@ -1,0 +1,22 @@
+experiment_name: resnet_to_ae_layer1_animalfaces
+
+# the greybox one wants to analyze
+GreyboxModel:
+  split_idx: 5
+  model: invariances.greybox.models.ResnetClassifier
+  subconfig:
+    pretrained_key: "resnet101_animalfaces_shared"
+    model: invariances.greybox.classifiers.ResNet
+
+# the conditional INN
+model: invariances.model.cinn.ConditionalTransformer
+Transformer:
+    hidden_depth: 2
+    in_channels: 128
+    mid_channels: 1024
+    n_flows: 20
+    conditioning_in_channels: 256
+    conditioning_spatial_size: 56
+    embedder_down: 2
+    activation: "none"
+    conditioning_option: "none"

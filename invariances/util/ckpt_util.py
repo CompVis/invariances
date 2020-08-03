@@ -8,7 +8,9 @@ URL_MAP = {
     "cinn_alexnet_aae_fc6": "https://heibox.uni-heidelberg.de/f/5d07dc071dd1450eb0a5/?dl=1",
     "cinn_alexnet_aae_fc7": "https://heibox.uni-heidelberg.de/f/050d4d76f3cf4eeeb9b6/?dl=1",
     "cinn_alexnet_aae_fc8": "https://heibox.uni-heidelberg.de/f/cb9c93497aae4e97890c/?dl=1",
-    "cinn_alexnet_aae_softmax": "https://heibox.uni-heidelberg.de/f/5a30088c51b44cc58bbe/?dl=1"
+    "cinn_alexnet_aae_softmax": "https://heibox.uni-heidelberg.de/f/5a30088c51b44cc58bbe/?dl=1",
+    "resnet101_animalfaces_shared": "https://heibox.uni-heidelberg.de/f/a2c36d628f574ed8aa68/?dl=1",
+    "resnet101_animalfaces_10": "https://heibox.uni-heidelberg.de/f/314926cb0d754cd9bb02/?dl=1",
 }
 
 CKPT_MAP = {
@@ -16,7 +18,9 @@ CKPT_MAP = {
     "cinn_alexnet_aae_fc6": "invariances/pretrained_models/cinns/alexnet/fc6.ckpt",
     "cinn_alexnet_aae_fc7": "invariances/pretrained_models/cinns/alexnet/fc7.ckpt",
     "cinn_alexnet_aae_fc8": "invariances/pretrained_models/cinns/alexnet/fc8.ckpt",
-    "cinn_alexnet_aae_softmax": "invariances/pretrained_models/cinns/alexnet/softmax.ckpt"
+    "cinn_alexnet_aae_softmax": "invariances/pretrained_models/cinns/alexnet/softmax.ckpt",
+    "resnet101_animalfaces_shared": "invariances/pretrained_models/classifiers/resnet101/animalfaces149_modelub_16908.ckpt",
+    "resnet101_animalfaces_10": "invariances/pretrained_models/classifiers/resnet101/animalfaces10_modelub_6118.ckpt",
 }
 
 MD5_MAP = {
@@ -24,8 +28,19 @@ MD5_MAP = {
     "cinn_alexnet_aae_fc6": "e7128567ee0686d362ed83cfda9fabc1",
     "cinn_alexnet_aae_fc7": "342ab8f9280ed83f30150e586c7df13b",
     "cinn_alexnet_aae_fc8": "ce6b5bfc316a855693b7e1808d6f3a46",
-    "cinn_alexnet_aae_softmax": "15fbdd0d8d51ba0031fbc07ebf0ba2f6"
+    "cinn_alexnet_aae_softmax": "15fbdd0d8d51ba0031fbc07ebf0ba2f6",
+    "resnet101_animalfaces_shared": "784b6b52eb30341484b5fb69e3b9ae60",
+    "resnet101_animalfaces_10": "473cd4c25e7dedf87967489992498f06",
 }
+
+STYLE_MODEL_URLS = {
+            'resnet50_trained_on_SIN':
+                'https://bitbucket.org/robert_geirhos/texture-vs-shape-pretrained-models/raw/6f41d2e86fc60566f78de64ecff35cc61eb6436f/resnet50_train_60_epochs-c8e5653e.pth.tar',
+            'resnet50_trained_on_SIN_and_IN':
+                'https://bitbucket.org/robert_geirhos/texture-vs-shape-pretrained-models/raw/60b770e128fffcbd8562a3ab3546c1a735432d03/resnet50_train_45_epochs_combined_IN_SF-2a0d100e.pth.tar',
+            'resnet50_trained_on_SIN_and_IN_then_finetuned_on_IN':
+                'https://bitbucket.org/robert_geirhos/texture-vs-shape-pretrained-models/raw/60b770e128fffcbd8562a3ab3546c1a735432d03/resnet50_finetune_60_epochs_lr_decay_after_30_start_resnet50_train_45_epochs_combined_IN_SF-ca06340c.pth.tar'
+            }
 
 ALEXNET_BASE_CONFIG = {
     "Transformer": {
@@ -103,6 +118,19 @@ CONFIG_MAP = {
             "conditioning_spatial_size": 1,
             "embedder_down": 3,
             }
+        },
+    "resnet101_animalfaces_shared":
+        {"Model": {
+            "n_classes": 149,
+            "type": "resnet101"
+            }
+        },
+
+    "resnet101_animalfaces_10":
+        {"Model": {
+                "n_classes": 10,
+                "type": "resnet101"
+                }
         },
 }
 

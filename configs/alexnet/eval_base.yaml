@@ -1,0 +1,30 @@
+iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
+loss: iin.losses.iin.Loss #  only relevant for training, calculates the negative log-likelihood
+
+# the autoencoder model for visualization
+AutoencoderModel:
+  pretrained_ae_key: "bigae_animals"
+
+# the conditional INN
+model: invariances.model.cinn.Dummy  # for using our pretrained INNs, we load an empty dummy model first and then
+                                     # replace it with the actual model # todo: somewhat hacky, but works
+pretrained_model: invariances.model.cinn.ConditionalTransformer
+
+# other hyperparameters
+base_learning_rate: 4.5e-06
+batch_size: 16
+log_freq: 1000
+
+datasets:
+  train: autoencoders.data.Folder
+  validation: autoencoders.data.Folder
+
+Folder:
+  folder: "data/custom"
+  size: 128
+
+# fid-score calculation
+fid:
+  batch_size: 20
+fid_stats:
+  pre_calc_stat_path: /fid_stats/animals128

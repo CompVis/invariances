@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<!--
+  Based on
+	Spatial by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117339330-4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-117339330-4');
+    </script>
+
+    <title>
+      Making Sense of CNNs: Interpreting Deep Representations & Their Invariances with INNs
+    </title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="landing">
+
+		<!-- Banner -->
+			<section id="banner" style="padding: 5em 0em 1em 0em;">
+        <h2>
+          Making Sense of CNNs: Interpreting Deep <br/>Representations & Their Invariances with INNs
+        </h2>
+        <p>
+        <a href="https://github.com/rromb">Robin Rombach</a>&ast;,
+        <a href="https://github.com/pesser">Patrick Esser</a>&ast;, 
+        <a href="https://hci.iwr.uni-heidelberg.de/Staff/bommer">Bj&ouml;rn Ommer</a><br/>
+        <a href="https://www.iwr.uni-heidelberg.de/">IWR, Heidelberg University</a><br/>
+        <a href="https://eccv2020.eu/">ECCV 2020</a></p>
+			</section>
+
+			<!-- One -->
+				<section id="one" class="wrapper style1" style="padding: 3em 0em 4em 0em;">
+					<div class="container 75%">
+            <div class="image fit captioned align-left"
+                 style="margin-bottom:2em; box-shadow:0 0;
+                                 text-align:justify">
+              <img src="images/overview.jpg" alt="" style="border:0px solid black"/>
+We provide post-hoc interpretation for a given neural
+network <var>f</var>. For a deep representation
+<var>z</var>, a conditional INN <var>t</var> recovers
+the model's invariances <var>v</var> from a representation
+<var style="text-decoration: overline;">z</var>
+which contains entangled information about <em>both</em> <var>z</var> and
+<var>v</var>.
+The INN <var>e</var> then translates
+<var style="text-decoration: overline;">z</var>
+into a
+factorized representation with accessible semantic concepts. This approach
+allows for various applications, including visualizations of network
+representations of natural and altered inputs, semantic network analysis
+and image modifications.
+            </div>
+						<div class="row 200%">
+							<div class="6u 12u$(medium) vert-center" style="margin:1% 0">
+                  <div class="container 25%">
+
+                    <div class="image fit captioned align-center"
+                                style="margin-bottom:0em; box-shadow:0 0">
+                      <!--TODO-->
+                      <a href="https://arxiv.org/">
+                        <img src="images/paper.jpg" alt="" style="border:1px solid black"/>
+                      </a>
+                      <!--TODO
+                      <a href="https://arxiv.org/abs/">arXiv</a>
+                      <div class="headerDivider"></div>
+                      -->
+                      <a href="images/invariances.bib">BibTeX</a>
+                      <div class="headerDivider"></div>
+                      <a href="https://github.com/CompVis/invariances">GitHub</a>
+                      <br/>
+                      &ast; equal contribution
+                    </div>
+
+                  </div>
+							</div>
+							<div class="6u$ 12u$(medium)">
+                <h1>Abstract</h1>
+                <p style="text-align: justify">
+To tackle increasingly complex tasks, it has become an essential ability of
+neural networks to learn abstract representations. These task-specific
+representations and, particularly, the invariances they capture turn neural
+networks into black box models that lack interpretability. To open such a
+black box, it is, therefore, crucial to uncover the different semantic
+concepts a model has learned as well as those that it has learned to be
+invariant to. We present an approach based on INNs that
+(i) recovers the task-specific, learned invariances by disentangling the
+remaining factor of variation in the data and that
+(ii) invertibly transforms these recovered invariances combined with the
+model representation into an equally expressive one with accessible semantic
+concepts.
+As a consequence, neural network representations
+become understandable by providing the means to (i) expose their semantic
+meaning, (ii) semantically modify a representation, and (iii) visualize
+individual learned semantic concepts and invariances. Our invertible approach
+significantly extends the abilities to understand black box models by
+enabling post-hoc interpretations of state-of-the-art networks without
+compromising their performance.
+                </p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+			<!-- Two -->
+				<section id="two" class="wrapper style2 special">
+					<div class="container">
+						<header class="major">
+							<h2>Results</h2>
+							<p>and applications of our model.</p>
+						</header>
+
+            __TEMPLATE_STRING__
+
+				  </div>
+				</section>
+
+
+			<!-- Four -->
+				<section id="four" class="wrapper style3 special">
+					<div class="container">
+						<header class="major">
+							<h2>Acknowledgement</h2>
+              <p>
+This work has been supported in part by the German Research
+Foundation (DFG) projects 371923335, 421703927, and EXC 2181/1 - 390900948 and
+the German federal ministry BMWi within the project <q>KI Absicherung<q>.
+This page is based on a design by <a href="http://templated.co">TEMPLATED</a>.
+              </p>
+						</header>
+					</div>
+				</section>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

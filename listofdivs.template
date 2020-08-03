@@ -1,0 +1,160 @@
+<div class="image fit captioned align-just">
+<div class="videocontainer">
+<video controls class="videothing">
+<source src="images/shortvideo.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<h3>Short Presentation</h3>
+Our short video presentation for <a href="https://eccv2020.eu/">ECCV 2020</a>.
+</div>
+==========
+<div class="image fit captioned align-just">
+<div class="videocontainer">
+<video controls class="videothing">
+<source src="images/longvideo.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<h3>Long Presentation</h3>
+Our long video presentation for <a href="https://eccv2020.eu/">ECCV 2020</a>.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure1-1.jpg">
+<img src="images/article-Figure1-1.jpg" alt="" />
+</a>
+Proposed architecture. We provide post-hoc interpretation for a given deep network f = Ψ ◦ Φ. For a deep representation z = Φ(x) a conditional INN t recovers Φ’s invariances v from a representation z̄ which contains entangled information about both z and v. The INN e then translates the representation z̄ into a factorized representation with accessible semantic concepts. This approach allows for various applications, including visualizations of network representations of natural and altered inputs, semantic network analysis and semantic image modifications.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure2-1.jpg">
+<img src="images/article-Figure2-1.jpg" alt="" />
+</a>
+&nbsp;
+<a href="images/article-Table1-1.jpg">
+<img src="images/article-Table1-1.jpg" alt="" />
+</a>
+Comparison to existing network inversion methods for AlexNet. In
+contrast to the methods of [13] (D&B) and [39] (M&V), our invertible method
+explicitly samples the invariances of Φ w.r.t. the data, which circumvents a
+common cause for artifacts and produces natural images independent of the depth
+of the layer which is reconstructed. The bottom row shows FID scores for layer
+visualizations of AlexNet, obtained with our method and [13] (D&B).
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure5-1.jpg">
+<img src="images/article-Figure5-1.jpg" alt="" />
+</a>
+Visualizing FGSM adversarial attacks on ResNet-101. To the human eye, the original image and its attacked version are almost indistinguishable. However, the input image is correctly classified as ”siamese cat”, while the attacked version is classified as ”mountain lion”. Our approach visualizes how the attack spreads throughout the network. Reconstructions of representations of attacked images demonstrate that the attack targets the semantic content of deep layers. The variance of z̄ explained by v combined with these visualizations show how increasing invariances cause vulnerability to adversarial attacks.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure20-1.jpg">
+<img src="images/article-Figure20-1.jpg" alt="" />
+</a>
+More visualizations of adversarial attacks as in the previous figure. Predictions of original vs. attacked version of the input image for all depicted examples: top left: ‘Lycaon pictus’ vs. ‘Cuon alpinus’; top right: ‘Snow Leopard’ vs. ‘Leopard’; bottom left: ‘West Highland white Terrier’ vs. ‘Yorkshire Terrier’; bottom right: ‘Blenheim Spaniel’ vs. ‘Japanese Spaniel’.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure6-1.jpg">
+<img src="images/article-Figure6-1.jpg" alt="" />
+</a>
+Revealing texture bias in ImageNet classifiers. We compare visualizations of z from the penultimate layer of ResNet-50 trained on standard ImageNet (left) and a stylized version of ImageNet (right). On natural images (rows 1-3) both models recognize the input, removing textures through stylization (rows 4-6) makes images unrecognizable to the standard model, however it recognizes objects from textured patches (rows 7-9). Rows 10-12 show that a model without texture bias can be used for sketch-to-image synthesis.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure19-1.jpg">
+<img src="images/article-Figure19-1.jpg" alt="" />
+</a>
+Texture bias: Additional examples for representation-conditional samples of two
+variants of ResNet-50, one trained on standard ImageNet, the other on a
+stylized version of ImageNet. See also the previous figure.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure4-1.jpg">
+<img src="images/article-Figure4-1.jpg" alt="" />
+</a>
+Analyzing the degree to which different semantic concepts are captured by a network representation changes as training progresses. For SqueezeNet on ColorMNIST we measure how much the data varies in different semantic concepts ei and how much of this variability is captured by z at different training iterations. Early on z is sensitive to foreground and background color, and later on it learns to focus on the digit attribute. The ability to encode this semantic concept is proportional to the classification accuracy achieved by z. At training iterations 4k and 36k we apply our method to visualize model representations and thereby illustrate how their content changes during training.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure14-1.jpg">
+<img src="images/article-Figure14-1.jpg" alt="" />
+</a>
+Additional z conditional samples after 4k and 36k training steps, as in the
+previous figure. Each row is conditioned on z = Φ(x) and each column is conditioned on a v ∼ N (v|0, 1). At 4k (resp. 36k) iterations, z explains 2.57% (resp. 36.08%) of the variance in the digit factor. Thus, the digit class of samples obtained at 4k iterations change with the sampled invariances across columns, while it stays the same at 36k iterations. Conversely, at 4k (resp. 36k) iterations, z explains 38.44% (resp. 2.76%) of the variance in the background color factor. Thus, the background color of samples obtained at 4k iterations change with the sampled representation z = Φ(x) across rows, while it stays the same at 38k iterations.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure13-1.jpg">
+<img src="images/article-Figure13-1.jpg" alt="" />
+</a>
+Zooming into feature visualization samples for an example of a snow leopard. σ denotes the softmax function.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure12-1.jpg">
+<img src="images/article-Figure12-1.jpg" alt="" />
+</a>
+Zooming into feature visualization samples for an example of a wolf. σ denotes the softmax function.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure3-1.jpg">
+<img src="images/article-Figure3-1.jpg" alt="" />
+</a>
+left : Visualizing FaceNet representations and their invariances. Sampling multiple reconstructions x̄ = D(t−1(v|z)) shows the degree of invariance learned by different layers. The invariance w.r.t. pose increases for deeper layers as expected for face identification. Surprisingly, FaceNet uses glasses as an identity feature throughout all its layers as evident from the spatial mean and variance plots, where the glasses are still visible. This reveals a bias and weakness of the model. right : Spatially averaged variances over multiple x for different layers.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure17-1.jpg">
+<img src="images/article-Figure17-1.jpg" alt="" />
+</a>
+Shifting domains: Human faces to animal faces evaluated with a fixed FaceNet. The evaluation procedure is similar to the method described in Fig. 3. Although never trained on data consisting of something else than human faces, FaceNet is able to capture the ”identity” of the input to a certain degree. Information about appearance is approximately preserved until the last layer, i.e. the final identity embedding.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure15-1.jpg">
+<img src="images/article-Figure15-1.jpg" alt="" />
+</a>
+Semantic Modifications on CelebA. In each column, we replace a semantic factor
+ei(E(x)) by e ∗ i , which is obtained from another, randomly chosen, image that
+differs in the corresponding attribute. Subsequently we decode a semantically
+modified image using the invertibility of e to obtain x̄∗ = D(e−1((e∗i ))). The
+results of StarGAN [8] are obtained by negating the binary value for the
+column’s attribute. FID scores in next figure.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure16-1.jpg">
+<img src="images/article-Figure16-1.jpg" alt="" />
+</a>
+Additional examples as in the previous figure. Moreover, the last row contains FID
+scores of semantically modified images obtained by our approach and [8]
+(StarGAN), which shows that our approach consistently outperforms [8].
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure7-1.jpg">
+<img src="images/article-Figure7-1.jpg" alt="" />
+</a>
+Semantic Modifications on CelebA. For each column, after inferring the semantic factors (ei)i = e(E(x)) of the input x, we replace one factor ei by that from another randomly chosen image that differs in this concept. The inverse of e translates this semantic change back into a modified z̄, which is decoded to a semantically modified image. Distances between FaceNet embeddings before and after modification demonstrate its sensitivity to differences in gender and glasses.
+<br/><br/><br/>
+<a href="images/article-Table11-1.jpg">
+<img src="images/article-Table11-1.jpg" alt="" />
+</a>
+Hyperparameters of INNs for each experiment. nflow denotes the number of
+invertible blocks within in the model, see Fig. 8. hw and hd refer to the width
+and depth of the fully connected subnetworks si and ti described in the
+supplementary.
+</div>
+==========
+<div class="image fit captioned align-just">
+<a href="images/article-Figure11-1.jpg">
+<img src="images/article-Figure11-1.jpg" alt="" />
+</a>
+Additional examples for layerwise reconstructions from model representations z = Φ(x) with our method and [13] (D&B). We show 10 samples per layer representation obtained with our generative approach. Here, σ denotes the softmax function, i.e. reconstructions are obtained from class probabilities provided by the model.
+</div>

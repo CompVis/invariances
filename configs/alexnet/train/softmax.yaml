@@ -3,6 +3,7 @@ experiment_name: alexnet_to_ae_softmax_animals
 datasets:
   train: autoencoders.data.ImageNetAnimalsTrain
   validation: autoencoders.data.ImageNetAnimalsValidation
+size: 128
 
 iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
 loss: iin.losses.iin.Loss

@@ -1,14 +1,15 @@
 import torch
 import streamlit as st
 import numpy as np
-#from edflow.util.edexplore import isimage, st_get_list_or_dict_item
+# from edflow.util.edexplore import isimage, st_get_list_or_dict_item
 from autoencoders.models.bigae import BigAE
 
 from invariances.util.ckpt_util import URL_MAP
 from invariances.model.cinn import ConditionalTransformer
 from invariances.greybox.models import AlexNetClassifier
 
-rescale = lambda x: (x+1.)/2.
+rescale = lambda x: (x + 1.) / 2.
+
 
 @st.cache(allow_output_mutation=True)
 def get_ae_state(gpu, name="animals"):
@@ -44,14 +45,14 @@ def visualize(ex, config):
     layer_dir = {"conv5": {"index": 12,  # 10 is interesting, 12 works
                            "load_key": "cinn_alexnet_aae_conv5"},
                  "fc6": {"index": 18,  # works
-                           "load_key": "cinn_alexnet_aae_fc6"},
+                         "load_key": "cinn_alexnet_aae_fc6"},
                  "fc7": {"index": 21,  # works
                          "load_key": "cinn_alexnet_aae_fc7"},
                  "fc8": {"index": 22,  # works
                          "load_key": "cinn_alexnet_aae_fc8"},
                  "softmax": {"index": 23,
-                         "load_key": "cinn_alexnet_aae_softmax"},
-    }
+                             "load_key": "cinn_alexnet_aae_softmax"},
+                 }
 
     st.write("Options")
     if torch.cuda.is_available():
@@ -64,9 +65,9 @@ def visualize(ex, config):
     alex_model = get_alex_state(gpu, layer_dir[cinn_layer]["index"])["model"]
     cinn_model = get_cinn_state(gpu, layer_dir[cinn_layer]["load_key"])["model"]
 
-    #image, image_key = st_get_list_or_dict_item(ex, "image", description="input image", filter_fn=isimage)
+    # image, image_key = st_get_list_or_dict_item(ex, "image", description="input image", filter_fn=isimage)
     image = example["image"]
-    xin = torch.tensor(image)[None,...].transpose(3,2).transpose(2,1).float()
+    xin = torch.tensor(image)[None, ...].transpose(3, 2).transpose(2, 1).float()
     if gpu:
         xin = xin.cuda()
 
@@ -76,20 +77,22 @@ def visualize(ex, config):
 
     num_samples = st.slider("number of samples", 2, 16, 4)
     outputs = {"reconstruction": ae_model.decode(zae)}
+
     def sample():
         for n in range(num_samples):
             zzsample = torch.randn_like(zz)
             zsample_ae = cinn_model.reverse(zzsample, zrep)
             outputs["sample{}".format(n)] = ae_model.decode(zsample_ae)
         return outputs
+
     outputs = sample()
     if st.checkbox("Resample Visualizations"):
         outputs = sample()
     for k in outputs:
-        outputs[k] = outputs[k].detach().cpu().numpy().transpose(0,2,3,1)
+        outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
 
     xrec = rescale(outputs["reconstruction"])
-    inrec = np.concatenate((rescale(image)[None,:,:,:], xrec))
+    inrec = np.concatenate((rescale(image)[None, :, :, :], xrec))
     st.write("Input & Reconstruction")
     st.image(inrec)
 
@@ -101,10 +104,11 @@ def visualize(ex, config):
 
 if __name__ == "__main__":
     from autoencoders.data import Folder
+
     dset = Folder({"Folder": {"folder":
                                   "data/custom",
-                              "size":128}
+                              "size": 128}
                    })
-    dataidx = st.slider("data index",0, len(dset), 0)
+    dataidx = st.slider("data index", 0, len(dset), 0)
     example = dset[dataidx]
     visualize(example, None)

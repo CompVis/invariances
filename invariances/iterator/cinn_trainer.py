@@ -6,7 +6,7 @@ from edflow.util import get_obj_from_str
 
 from invariances.iterator.base_trainer import Trainer
 
-halfscale = lambda x: 0.5*(x+1.)
+halfscale = lambda x: 0.5 * (x + 1.)
 
 
 class AutoencoderConcatTrainer(Trainer):
@@ -14,6 +14,7 @@ class AutoencoderConcatTrainer(Trainer):
     Concatenates a given neural network (e.g. a classifier) and an autoencoder.
     Example: see configs/alexnet
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         greybox_config = self.config["GreyboxModel"]
@@ -138,7 +139,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.epsilon = retrieve(self.config, "Attack/epsilon",
-                                default = 1.0)
+                                default=1.0)
         self.loss = torch.nn.CrossEntropyLoss()
         self.logger.info("Attack with epsilon = {}".format(self.epsilon))
         self.disable_callback = retrieve(self.config, "disable_callback",
@@ -157,7 +158,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
         # Collect the element-wise sign of the data gradient
         sign_data_grad = data_grad.sign()
         # Create the perturbed image by adjusting each pixel of the input image
-        perturbed_image = image + epsilon*sign_data_grad
+        perturbed_image = image + epsilon * sign_data_grad
         # Adding clipping to maintain [-1,1] range
         perturbed_image = torch.clamp(perturbed_image, -1, 1)
         # Return the perturbed image
@@ -169,7 +170,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
         fake_grad = torch.tensor(np.random.RandomState(1).randn(*data_grad.shape)).to(data_grad)
         sign_data_grad = fake_grad.sign()
         # Create the perturbed image by adjusting each pixel of the input image
-        perturbed_image = image + epsilon*sign_data_grad
+        perturbed_image = image + epsilon * sign_data_grad
         # Adding clipping to maintain [-1,1] range
         perturbed_image = torch.clamp(perturbed_image, -1, 1)
         # Return the perturbed image
@@ -188,7 +189,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
         cls = self.totorch(kwargs["class"])
         loss = self.loss(original_logits.squeeze(-1).squeeze(-1),
                          cls.type(torch.long))
-        #self.greybox.zero_grad()  todo: wat ???
+        # self.greybox.zero_grad()  todo: wat ???
         loss.backward()
         grad = original_image.grad.data
         attacked_image, attacked_noise = self.fgsm_attack(original_image, self.epsilon, grad)
@@ -226,7 +227,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
                 sss = torch.randn(self.n_samples, original_ss_z.shape[1], 1, 1).to(original_z)
 
                 cond_orig = cond_orig.expand(
-                    (self.n_samples,cond_orig.shape[0],cond_orig.shape[1],cond_orig.shape[2])).clone()
+                    (self.n_samples, cond_orig.shape[0], cond_orig.shape[1], cond_orig.shape[2])).clone()
                 cond_atta = cond_atta.expand(
                     (self.n_samples, cond_atta.shape[0], cond_atta.shape[1], cond_atta.shape[2])).clone()
                 cond_noisy = cond_noisy.expand(
@@ -262,7 +263,7 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
         log["attacked_noise"] = self.tonp(attacked_noise)
         log["noisy_noise"] = self.tonp(noisy_noise)
         log["original_noise"] = np.zeros_like(log["original_image"])
-        log["original_noise"][:,0,0,0] = -0.001
+        log["original_noise"][:, 0, 0, 0] = -0.001
         log["original_reconstruction"] = self.tonp(original_reconstruction)
         log["recovered_reconstruction"] = self.tonp(recovered_reconstruction)
         log["attacked_reconstruction"] = self.tonp(attacked_reconstruction)
@@ -276,8 +277,8 @@ class VisualizeAttacks(AutoencoderConcatTrainer):
                                                                                         self.n_samples,
                                                                                         shape[1], shape[2], shape[3])
         log["labels"]["samples_noisy"] = self.tonp(decoded_samples_noisy).reshape(original_image.shape[0],
-                                                                                        self.n_samples,
-                                                                                        shape[1], shape[2], shape[3])
+                                                                                  self.n_samples,
+                                                                                  shape[1], shape[2], shape[3])
         log["labels"]["samples_original"] = self.tonp(decoded_samples_original).reshape(original_image.shape[0],
                                                                                         self.n_samples,
                                                                                         shape[1], shape[2], shape[3])
@@ -288,7 +289,7 @@ def visualization(root, data_in, data_out, config):
     # visualizaiton of attacks, maybe add a 'callbacks.py' file
     import edflow
     import numpy as np
-    epsilon = retrieve(config, "Attack/epsilon", default = 1.0)
+    epsilon = retrieve(config, "Attack/epsilon", default=1.0)
     logger = edflow.get_logger("attack_visualization")
     logger.info("fgsm @ {}".format(epsilon))
 
@@ -306,39 +307,39 @@ def visualization(root, data_in, data_out, config):
     correct_mask = original_pred == gt
     fooled_mask = attacked_pred != original_pred
     example_indices = np.where(correct_mask & fooled_mask)[0]
-    np.random.shuffle(example_indices) # si?
+    np.random.shuffle(example_indices)  # si?
     import matplotlib.pyplot as plt
     import os
     rows = 6
     cols = 1
     subcols = 4
     h_factor = rows / 2
-    fig, axes = plt.subplots(rows, cols*subcols, figsize=[12.8, 7.2*h_factor], dpi=100, constrained_layout=True)
+    fig, axes = plt.subplots(rows, cols * subcols, figsize=[12.8, 7.2 * h_factor], dpi=100, constrained_layout=True)
     for i in range(rows):
         for j in range(cols):
-            idx = example_indices[cols*i+j]
+            idx = example_indices[cols * i + j]
 
             # original and prediction
-            axes[i,subcols*j+0].imshow(halfscale(data_in[idx]["image"].squeeze()))
-            axes[i,subcols*j+0].axis('off')
+            axes[i, subcols * j + 0].imshow(halfscale(data_in[idx]["image"].squeeze()))
+            axes[i, subcols * j + 0].axis('off')
             pred = data_out.labels["original_logits"][idx].squeeze().argmax(0)
-            axes[i,subcols*j+0].set_title("original prediction: {}".format(pred))
+            axes[i, subcols * j + 0].set_title("original prediction: {}".format(pred))
 
             # attacked and prediction
-            axes[i,subcols*j+1].imshow(data_out[idx]["attacked_image"])
-            axes[i,subcols*j+1].axis('off')
+            axes[i, subcols * j + 1].imshow(data_out[idx]["attacked_image"])
+            axes[i, subcols * j + 1].axis('off')
             pred = data_out.labels["attacked_logits"][idx].squeeze().argmax(0)
-            axes[i,subcols*j+1].set_title("prediction: {}".format(pred))
+            axes[i, subcols * j + 1].set_title("prediction: {}".format(pred))
 
             # original reconstruction
-            axes[i,subcols*j+2].imshow(data_out[idx]["recovered_reconstruction"])
-            axes[i,subcols*j+2].axis('off')
-            axes[i,subcols*j+2].set_title("reconstruction from original z")
+            axes[i, subcols * j + 2].imshow(data_out[idx]["recovered_reconstruction"])
+            axes[i, subcols * j + 2].axis('off')
+            axes[i, subcols * j + 2].set_title("reconstruction from original z")
 
             # attacked reconstruction
-            axes[i,subcols*j+3].imshow(data_out[idx]["attacked_reconstruction"])
-            axes[i,subcols*j+3].axis('off')
-            axes[i,subcols*j+3].set_title("reconstruction from attacked z")
+            axes[i, subcols * j + 3].imshow(data_out[idx]["attacked_reconstruction"])
+            axes[i, subcols * j + 3].axis('off')
+            axes[i, subcols * j + 3].set_title("reconstruction from attacked z")
 
     outpath = os.path.join(root, "examples.png")
     logger.info(outpath)
@@ -351,6 +352,7 @@ class BigGANConcatTrainer(Trainer):
     """
     todo: description
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         model_config = self.config["GreyboxModel"]
@@ -403,7 +405,7 @@ class BigGANConcatTrainer(Trainer):
             xinrec = self.decoder.generate_from_embedding(zin, einrec)
 
         split_sizes = [zin.shape[1], ein.shape[1]]
-        zdec = torch.cat([zin, einrec.detach()], dim=1)[:, :, None, None]   # this will be flowed
+        zdec = torch.cat([zin, einrec.detach()], dim=1)[:, :, None, None]  # this will be flowed
 
         zfeatures = self.network.encode(xin).sample()
         znet = zfeatures[self.layer_idx]
@@ -425,7 +427,7 @@ class BigGANConcatTrainer(Trainer):
 
                 for n in range(3):
                     zz_sample = torch.randn_like(zdec)
-                    zdec_sample = self.model.reverse(zz_sample,znet).squeeze(-1).squeeze(-1)
+                    zdec_sample = self.model.reverse(zz_sample, znet).squeeze(-1).squeeze(-1)
                     xdec_sample = self.decoder.generate_from_embedding(
                         *torch.split(zdec_sample, split_sizes, dim=1))
 

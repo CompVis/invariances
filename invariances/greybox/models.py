@@ -13,7 +13,7 @@ from invariances.model.blocks import ActNorm
 from invariances.model.cinn import DenseEmbedder, Embedder
 from invariances.util.model_util import Flatten
 
-rescale = lambda x: 0.5*(x+1)
+rescale = lambda x: 0.5 * (x + 1)
 
 
 class AbstractGreybox(nn.Module):
@@ -25,6 +25,7 @@ class AbstractGreybox(nn.Module):
     complete forward pass.
 
     """
+
     def __init__(self, config):
         super().__init__()
         self.config = config["subconfig"]
@@ -77,19 +78,19 @@ class AlexNetClassifier(AbstractGreybox):
         self.layers.append(nn.Softmax())
         assert len(self.layers) == 23
         self.logger.info("Layer Information: \n {}".format(self.layers))
-        del model   # don't need this hanging around
+        del model  # don't need this hanging around
 
     def encode(self, x):
         """
         return before x is passed through the layer indexed by 'self.split_at'
         """
         x = self._pre_process(x)
-        for i in range(len(self.layers)+1):
+        for i in range(len(self.layers) + 1):
             if i != self.split_at:
                 x = self.layers[i](x)
             else:
                 if len(x.shape) == 2:
-                    x = x[:,:,None,None]
+                    x = x[:, :, None, None]
                 return DiracDistribution(x)
 
     def decode(self, x):
@@ -185,6 +186,7 @@ class ResnetClassifier(AbstractGreybox):
         self.layers.append(model.layer4)
         self.layers.append(model.avgpool)
         self.layers.append(model.fc)
+        self.logger.info("Layer Information: \n {}".format(self.layers))
 
     def forward(self, x):
         x = self._pre_process(x)
@@ -196,7 +198,7 @@ class ResnetClassifier(AbstractGreybox):
 
     def encode(self, x):
         x = self._pre_process(x)
-        for i in range(len(self.layers)+1):
+        for i in range(len(self.layers) + 1):
             if i != self.split_at:
                 x = self.layers[i](x)
             else:
@@ -246,7 +248,7 @@ class ResnetClassifier(AbstractGreybox):
         features.append(x)
         x = torch.flatten(x, 1)
         x = self.model.fc(x)
-        features.append(F.softmax(x, dim=1)[:,:,None,None])   # class probs
+        features.append(F.softmax(x, dim=1)[:, :, None, None])  # class probs
         return features
 
     def dense_predict(self, x):
@@ -283,6 +285,7 @@ class WideResnetClassifier(ResnetClassifier):
      shape (3 x H x W), where H and W are expected to be at least 224. The images have to be loaded in to
      a range of [0, 1] and then normalized using mean = [0.485, 0.456, 0.406] and std = [0.229, 0.224, 0.225].
     """
+
     def __init__(self, config):
         super().__init__(config)
         __possible_resnets = {
@@ -304,7 +307,7 @@ class WideResnetClassifier(ResnetClassifier):
         clf_head_type = retrieve(config, "Model/clf_head", default="linear")
         self.type = type
         self.n_out = n_out
-        self.model = __possible_resnets[type](pretrained=retrieve(config, "Model/norm")=='bn', norm_layer=norm_layer)
+        self.model = __possible_resnets[type](pretrained=retrieve(config, "Model/norm") == 'bn', norm_layer=norm_layer)
         if finetune:
             self.model.fc = __classification_heads[clf_head_type](self.model.fc.in_features, n_out)
 

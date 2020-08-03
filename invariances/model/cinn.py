@@ -11,6 +11,7 @@ from invariances.util.ckpt_util import get_ckpt_path, URL_MAP, CONFIG_MAP
 
 class DenseEmbedder(nn.Module):
     """Basically an MLP. Maps vector-like features to some other vector of given dimenionality"""
+
     def __init__(self, in_dim, up_dim, depth=4, given_dims=None):
         super().__init__()
         self.net = nn.ModuleList()
@@ -20,7 +21,7 @@ class DenseEmbedder(nn.Module):
             dims = given_dims
         else:
             dims = np.linspace(in_dim, up_dim, depth).astype(int)
-        for l in range(len(dims)-2):
+        for l in range(len(dims) - 2):
             self.net.append(nn.Conv2d(dims[l], dims[l + 1], 1))
             self.net.append(ActNorm(dims[l + 1]))
             self.net.append(nn.LeakyReLU(0.2))
@@ -35,11 +36,12 @@ class DenseEmbedder(nn.Module):
 
 class Embedder(nn.Module):
     """Embeds a 4-dim tensor onto dense latent code."""
+
     def __init__(self, in_spatial_size, in_channels, emb_dim, n_down=4):
         super().__init__()
         self.feature_layers = nn.ModuleList()
         norm = 'an'  # hard coded
-        bottleneck_size = in_spatial_size // 2**n_down
+        bottleneck_size = in_spatial_size // 2 ** n_down
         self.feature_layers.append(FeatureLayer(0, in_channels=in_channels, norm=norm))
         for scale in range(1, n_down):
             self.feature_layers.append(FeatureLayer(scale, norm=norm))
@@ -59,6 +61,7 @@ class Embedder(nn.Module):
 
 class ConditionalTransformer(nn.Module):
     """Conditional Transformer"""
+
     def __init__(self, config):
         import torch.backends.cudnn as cudnn
         cudnn.benchmark = True
@@ -148,20 +151,23 @@ class PretrainedModel(ConditionalTransformer):
         except AttributeError:
             return getattr(self, name)
 
+
 class Dummy:
     def __init__(self, dummy):
         pass
 
+
 if __name__ == "__main__":
     # TODO: kick this whole part
     from invariances.util.ckpt_util import URL_MAP
+
     for key in URL_MAP:
         print("loading key {}...".format(key))
         model = ConditionalTransformer.from_pretrained(key)
         print("model sucessfully loaded.")
         z = torch.randn(11, 128, 1, 1)
-        #zz, _ = model(z, cond)
-        #zrec  = model.reverse(zz, cond)
-        #print("norm:", torch.norm(z-zz))
+        # zz, _ = model(z, cond)
+        # zrec  = model.reverse(zz, cond)
+        # print("norm:", torch.norm(z-zz))
     print("loaded all")
     print("done.")

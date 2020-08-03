@@ -1,8 +1,8 @@
-experiment_name: alexnet_to_ae_fc7_animals
+experiment_name: alexnet_to_ae_conv5_animals
 
 datasets:
-  train: autoencoders.data.ImageNetAnimalsTrain
-  validation: autoencoders.data.ImageNetAnimalsValidation
+  train: autoencoders.data.AnimalFacesTrain
+  validation: autoencoders.data.AnimalFacesTest
 size: 128
 
 iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
@@ -10,8 +10,8 @@ loss: iin.losses.iin.Loss
 
 # the greybox one wants to analyze
 GreyboxModel:
-  split_idx: 21
-  model: invariances.greybox.models.AlexNetClassifier
+  split_idx: 5
+  model: invariances.greybox.models.ResnetClassifier
   subconfig:
     Model:
       pretrained: True
@@ -23,9 +23,9 @@ Transformer:
     in_channels: 128
     mid_channels: 1024
     n_flows: 20
-    conditioning_in_channels: 4096
-    conditioning_spatial_size: 1
-    embedder_down: 3
+    conditioning_in_channels: 256
+    conditioning_spatial_size: 13
+    embedder_down: 2
     activation: "none"
     conditioning_option: "none"
 

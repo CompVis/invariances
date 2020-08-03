@@ -41,7 +41,7 @@ def get_learning_rate(config):
     if "learning_rate" in config:
         learning_rate = config["learning_rate"]
     elif "base_learning_rate" in config:
-        learning_rate = config["base_learning_rate"]*config["batch_size"]
+        learning_rate = config["base_learning_rate"] * config["batch_size"]
     else:
         learning_rate = 0.001
     return learning_rate
@@ -84,6 +84,7 @@ class Iterator(TemplateIterator):
         - no_restore_keys : string1,string2 : Submodels which should not be
                                               restored from checkpoint.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -150,11 +151,12 @@ class Trainer(Iterator):
                                        batch size (ignored if learning_rate is present)
         - loss : string : Import path of loss.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.learning_rate = get_learning_rate(self.config)
         self.loss_lr_factor = retrieve(self.config, "loss_lr_factor", default=1.0)
-        self.loss_lr = self.loss_lr_factor*self.learning_rate
+        self.loss_lr = self.loss_lr_factor * self.learning_rate
         self.logger.info("learning_rate: {}".format(self.learning_rate))
         self.logger.info("loss learning_rate: {}".format(self.loss_lr))
         if "loss" in self.config:

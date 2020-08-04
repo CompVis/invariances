@@ -11,6 +11,7 @@ URL_MAP = {
     "cinn_alexnet_aae_softmax": "https://heibox.uni-heidelberg.de/f/5a30088c51b44cc58bbe/?dl=1",
     "resnet101_animalfaces_shared": "https://heibox.uni-heidelberg.de/f/a2c36d628f574ed8aa68/?dl=1",
     "resnet101_animalfaces_10": "https://heibox.uni-heidelberg.de/f/314926cb0d754cd9bb02/?dl=1",
+    "cinn_resnet_animalfaces10_ae_maxpool": "https://heibox.uni-heidelberg.de/f/30dc2640dfd54b339f93/?dl=1",
 }
 
 CKPT_MAP = {
@@ -21,6 +22,7 @@ CKPT_MAP = {
     "cinn_alexnet_aae_softmax": "invariances/pretrained_models/cinns/alexnet/softmax.ckpt",
     "resnet101_animalfaces_shared": "invariances/pretrained_models/classifiers/resnet101/animalfaces149_modelub_16908.ckpt",
     "resnet101_animalfaces_10": "invariances/pretrained_models/classifiers/resnet101/animalfaces10_modelub_6118.ckpt",
+    "cinn_resnet_animalfaces10_ae_maxpool": "invariances/pretrained_models/cinns/maxpool_model-7000.ckpt"
 }
 
 MD5_MAP = {
@@ -31,6 +33,7 @@ MD5_MAP = {
     "cinn_alexnet_aae_softmax": "15fbdd0d8d51ba0031fbc07ebf0ba2f6",
     "resnet101_animalfaces_shared": "784b6b52eb30341484b5fb69e3b9ae60",
     "resnet101_animalfaces_10": "473cd4c25e7dedf87967489992498f06",
+    "cinn_resnet_animalfaces10_ae_maxpool": "bc6ef45423b44920a21f5b99b637a77e"
 }
 
 STYLE_MODEL_URLS = {
@@ -132,6 +135,19 @@ CONFIG_MAP = {
                 "type": "resnet101"
                 }
         },
+    "cinn_resnet_animalfaces10_ae_maxpool":
+        {"Transformer": {
+            "hidden_depth": 2,
+            "in_channels": 128,
+            "mid_channels": 1024,
+            "n_flows": 20,
+            "conditioning_in_channels": 64,
+            "conditioning_spatial_size": 56,
+            "embedder_down": 4,
+            "activation": "none",
+            "conditioning_option": "none"
+        }
+        }
 }
 
 

@@ -1,8 +1,8 @@
-experiment_name: resnet_to_ae_layer1_animalfaces
+experiment_name: resnet_to_ae_softmax_animalfaces
 
 # the greybox one wants to analyze
 GreyboxModel:
-  split_idx: 5
+  split_idx: 12
   model: invariances.greybox.models.ResnetClassifier
   subconfig:
     pretrained_key: "resnet101_animalfaces_shared"
@@ -15,8 +15,8 @@ Transformer:
     in_channels: 128
     mid_channels: 1024
     n_flows: 20
-    conditioning_in_channels: 256
-    conditioning_spatial_size: 56
-    embedder_down: 4
+    conditioning_in_channels: 149
+    conditioning_spatial_size: 1
+    conditioning_depth: 4
     activation: "none"
     conditioning_option: "none"

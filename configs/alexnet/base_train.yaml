@@ -1,6 +1,6 @@
 datasets:
-  train: autoencoders.data.AnimalFacesRestrictedTrain
-  validation: autoencoders.data.AnimalFacesRestrictedTest
+  train: autoencoders.data.ImageNetAnimalsTrain
+  validation: autoencoders.data.ImageNetAnimalsValidation
 size: 128
 
 iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
@@ -9,16 +9,15 @@ loss: iin.losses.iin.Loss
 # other hyperparameters
 base_learning_rate: 4.5e-06
 batch_size: 16
-num_steps: 50000
+num_steps: 250000
 log_freq: 1000
-ckpt_freq: 1000
 
 # the autoencoder model for visualization
 AutoencoderModel:
-  pretrained_ae_key: "bigae_animalfaces"
+  pretrained_ae_key: "bigae_animals"
 
 # fid-score calculation
 fid:
   batch_size: 20
 fid_stats:
-  pre_calc_stat_path: /fid_stats/animalfaces128
+  pre_calc_stat_path: /fid_stats/animals128

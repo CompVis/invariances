@@ -11,6 +11,7 @@ base_learning_rate: 4.5e-06
 batch_size: 16
 num_steps: 250000
 log_freq: 1000
+ckpt_freq: 10000
 
 # the autoencoder model for visualization
 AutoencoderModel:

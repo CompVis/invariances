@@ -60,8 +60,11 @@ class Embedder(nn.Module):
 
 
 class ConditionalTransformer(nn.Module):
-    """Conditional Transformer"""
-
+    """
+    Conditional Invertible Neural Network.
+    Can be conditioned both on input with spatial dimension (i.e. a tensor of shape BxCxHxW) and a flat input
+    (i.e. a tensor of shape BxC)
+    """
     def __init__(self, config):
         import torch.backends.cudnn as cudnn
         cudnn.benchmark = True
@@ -155,19 +158,3 @@ class PretrainedModel(ConditionalTransformer):
 class Dummy:
     def __init__(self, dummy):
         pass
-
-
-if __name__ == "__main__":
-    # TODO: kick this whole part
-    from invariances.util.ckpt_util import URL_MAP
-
-    for key in URL_MAP:
-        print("loading key {}...".format(key))
-        model = ConditionalTransformer.from_pretrained(key)
-        print("model sucessfully loaded.")
-        z = torch.randn(11, 128, 1, 1)
-        # zz, _ = model(z, cond)
-        # zrec  = model.reverse(zz, cond)
-        # print("norm:", torch.norm(z-zz))
-    print("loaded all")
-    print("done.")

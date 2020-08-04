@@ -69,7 +69,7 @@ class AlexNetClassifier(AbstractGreybox):
         self.logger = get_logger(self.__class__.__name__)
         model = self.prepare(model_as_str=self.model_config["model"],
                              checkpoint=retrieve(self.model_config, "checkpoint", default="none"),
-                             )
+                             ).model
         normalize = torchvision.transforms.Normalize(mean=self.mean, std=self.std)
         self.image_transform = torchvision.transforms.Compose([
             torchvision.transforms.Lambda(lambda image: F.interpolate(image, size=(227, 227), mode="bilinear")),
@@ -144,19 +144,21 @@ class ResnetClassifier(AbstractGreybox):
                              ).model
 
         self.layers = nn.ModuleList()
-        self.layers.append(model.conv1)
-        self.layers.append(model.bn1)
-        self.layers.append(model.relu)
-        self.layers.append(model.maxpool)
-        self.layers.append(model.layer1)
-        self.layers.append(model.layer2)
-        self.layers.append(model.layer3)
-        self.layers.append(model.layer4)
-        self.layers.append(model.avgpool)
-        self.layers.append(model.fc)
+        # input:                           index  0      x
+        self.layers.append(model.conv1)         # 1
+        self.layers.append(model.bn1)           # 2
+        self.layers.append(model.relu)          # 3
+        self.layers.append(model.maxpool)       # 4      x
+        self.layers.append(model.layer1)        # 5
+        self.layers.append(model.layer2)        # 6
+        self.layers.append(model.layer3)        # 7      x
+        self.layers.append(model.layer4)        # 8
+        self.layers.append(model.avgpool)       # 9      x
+        self.layers.append(Flatten(1))          # 10
+        self.layers.append(model.fc)            # 11
         if retrieve(config, "append_softmax", default=True):
             self.logger.info("Note: Appending Softmax as last layer in classifier.")
-            self.layers.append(nn.Softmax())
+            self.layers.append(nn.Softmax())    # 12     x
         self.logger.info("Layer Information: \n {}".format(self.layers))
 
     def encode(self, x):
@@ -165,6 +167,8 @@ class ResnetClassifier(AbstractGreybox):
             if i != self.split_at:
                 x = self.layers[i](x)
             else:
+                if len(x.shape) == 2:
+                    x = x[:, :, None, None]
                 return DiracDistribution(x)
 
     def decode(self, x):
@@ -180,18 +184,19 @@ class ResnetClassifier(AbstractGreybox):
         For Resnet-101, the following sizes are returned (11 is batch-size and can be ignored,
         the ones marked with an 'x' were used in the paper.):
 
-            torch.Size([11, 3, 224, 224])   ---  150528                                     x
+            torch.Size([11, 3, 224, 224])   ---  150528                                     x   input
             torch.Size([11, 64, 112, 112])  ---  802816
             torch.Size([11, 64, 112, 112])  ---  802816
             torch.Size([11, 64, 112, 112])  ---  802816
-            torch.Size([11, 64, 56, 56])    ---  200704                                     x
-            torch.Size([11, 256, 56, 56])   ---  802816
-            torch.Size([11, 512, 28, 28])   ---  401408
-            torch.Size([11, 1024, 14, 14])  ---  200704                                     x
-            torch.Size([11, 2048, 7, 7])    ---  100352
-            torch.Size([11, 2048, 1, 1])    ---  2048                                       x
-            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  logits
-            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  softmaxed logits     x
+            torch.Size([11, 64, 56, 56])    ---  200704                                     x   maxpool
+            torch.Size([11, 256, 56, 56])   ---  802816                                         layer1
+            torch.Size([11, 512, 28, 28])   ---  401408                                         layer2
+            torch.Size([11, 1024, 14, 14])  ---  200704                                     x   layer3
+            torch.Size([11, 2048, 7, 7])    ---  100352                                         layer4
+            torch.Size([11, 2048, 1, 1])    ---  2048                                       x   avgpool
+            flatten...                                                                          flatten
+            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  logits                   fc
+            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  softmaxed logits     x   softmax
 
         """
         raise NotImplementedError

@@ -22,9 +22,3 @@ datasets:
 Folder:
   folder: "data/custom"
   size: 128
-
-# fid-score calculation
-fid:
-  batch_size: 20
-fid_stats:
-  pre_calc_stat_path: /fid_stats/animals128

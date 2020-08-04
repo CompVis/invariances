@@ -1,42 +1,13 @@
 experiment_name: alexnet_to_ae_fc6_animals_eval
 
-iterator: invariances.iterator.cinn_trainer.AutoencoderConcatTrainer
-loss: iin.losses.iin.Loss     #  only relevant for training, calculates the negative log-likelihood
-
 # the greybox one wants to analyze
 GreyboxModel:
   split_idx: 18
   model: invariances.greybox.models.AlexNetClassifier
   subconfig:
+    model: invariances.greybox.classifiers.AlexNet
     Model:
       pretrained: True
 
-# the autoencoder model for visualization
-AutoencoderModel:
-  pretrained_ae_key: "bigae_animals"
-
 # the conditional INN
-model: invariances.model.cinn.Dummy
-pretrained_model: invariances.model.cinn.ConditionalTransformer
 pretrained_key: "cinn_alexnet_aae_fc6"
-
-# other hyperparameters
-base_learning_rate: 4.5e-06
-batch_size: 7
-num_steps: 250000
-log_freq: 1000
-
-
-datasets:
-  train: autoencoders.data.Folder   # todo: this is a dummy, still neeed this in autoencoders
-  validation: autoencoders.data.Folder
-
-Folder:
-  folder: "data/custom"
-  size: 128
-
-# fid-score calculation
-fid:
-  batch_size: 20
-fid_stats:
-  pre_calc_stat_path: /fid_stats/animals128

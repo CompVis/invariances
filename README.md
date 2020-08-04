@@ -40,14 +40,20 @@ Optionally, you can then also `conda install tensorflow-gpu=1.14` to speed up
 FID evaluations.
 
 ## Demos
+To get started you can directly dive into some demos. Please note that
+checkpoints will be downloaded on demand, which can take a while. You can see
+the download progress displayed in the terminal running the streamlit command.
+
 ### Feature Visualization
 To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
 run 
 ```
 streamlit run invariances/demo_visualization.py
 ```
+
 ### Adversarial Attacks
 coming soon
+
 # TODO: from here iin readme - adopt
 ## Data -- TODO
 `MNIST`, `FashionMNIST` and `CIFAR10` will be downloaded automatically the

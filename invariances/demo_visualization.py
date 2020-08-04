@@ -29,6 +29,7 @@ def get_alex_state(gpu, split_idx):
                                })
     if gpu:
         model.cuda()
+    model.eval()
     state = {"model": model}
     return state
 
@@ -88,7 +89,7 @@ def visualize(example, config):
         return outputs
 
     outputs = sample()
-    if st.checkbox("Resample Visualizations"):
+    if st.button("Resample Visualizations"):
         outputs = sample()
     for k in outputs:
         outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
@@ -112,6 +113,6 @@ if __name__ == "__main__":
                         "size": 128}
                  })
 
-    dataidx = st.slider("data index", 0, len(dset), 0)
+    dataidx = st.slider("data index", 0, len(dset)-1, 0)
     example = dset[dataidx]
     visualize(example, None)

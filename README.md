@@ -44,7 +44,7 @@ FID evaluations.
 To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
 run 
 ```
-streamlit run invariances/demo.py
+streamlit run invariances/demo_visualization.py
 ```
 ### Adversarial Attacks
 coming soon

@@ -57,13 +57,13 @@ def visualize(example, config):
                              "load_key": "cinn_alexnet_aae_softmax"},
                  }
 
-    st.write("Options")
+    st.sidebar.text("Options")
     if torch.cuda.is_available():
-        gpu = st.checkbox("gpu", value=True)
+        gpu = st.sidebar.checkbox("gpu", value=True)
     else:
         gpu = False
 
-    cinn_layer = st.selectbox("Which layer do you want to visualize?", ("conv5", "fc6", "fc7", "fc8", "softmax"))
+    cinn_layer = st.sidebar.selectbox("Which layer do you want to visualize?", ("conv5", "fc6", "fc7", "fc8", "softmax"))
     ae_model = get_ae_state(gpu=gpu, name="animals")["model"]
     alex_model = get_alex_state(gpu, layer_dir[cinn_layer]["index"])["model"]
     cinn_model = get_cinn_state(gpu, layer_dir[cinn_layer]["load_key"])["model"]
@@ -78,7 +78,7 @@ def visualize(example, config):
     zae = ae_model.encode(xin).sample()
     zz, _ = cinn_model(zae, zrep)
 
-    num_samples = st.slider("number of samples", 2, 16, 4)
+    num_samples = st.sidebar.slider("number of samples", 2, 16, 4)
     outputs = {"reconstruction": ae_model.decode(zae)}
 
     def sample():
@@ -89,19 +89,19 @@ def visualize(example, config):
         return outputs
 
     outputs = sample()
-    if st.button("Resample Visualizations"):
+    if st.sidebar.button("Resample Visualizations"):
         outputs = sample()
     for k in outputs:
         outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
 
     xrec = rescale(outputs["reconstruction"])
     inrec = np.concatenate((rescale(image)[None, :, :, :], xrec))
-    st.write("Input & Reconstruction")
+    st.text("Input & Autoencoder Reconstruction")
     st.image(inrec)
 
     # concat the samples, then display
     samples = np.concatenate([rescale(outputs["sample{}".format(n)]) for n in range(num_samples)])
-    st.write("Samples")
+    st.text("cINN Samples of Input Reconstructions from Layer {}".format(cinn_layer))
     st.image(samples)
 
 
@@ -113,6 +113,7 @@ if __name__ == "__main__":
                         "size": 128}
                  })
 
-    dataidx = st.slider("data index", 0, len(dset)-1, 0)
+    st.title("Making Sense of CNNs")
+    dataidx = st.sidebar.slider("Example", 0, len(dset)-1, 0)
     example = dset[dataidx]
     visualize(example, None)

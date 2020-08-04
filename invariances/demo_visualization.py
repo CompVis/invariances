@@ -23,7 +23,9 @@ def get_ae_state(gpu, name="animals"):
 @st.cache(allow_output_mutation=True)
 def get_alex_state(gpu, split_idx):
     model = AlexNetClassifier({"split_idx": split_idx,
-                               "subconfig": {}
+                               "subconfig": {
+                                   "model": "invariances.greybox.classifiers.AlexNet"
+                                                }
                                })
     if gpu:
         model.cuda()
@@ -44,11 +46,11 @@ def get_cinn_state(gpu, name="cinn_alexnet_aae_conv5"):
 def visualize(ex, config):
     layer_dir = {"conv5": {"index": 12,  # 10 is interesting, 12 works
                            "load_key": "cinn_alexnet_aae_conv5"},
-                 "fc6": {"index": 18,  # works
+                 "fc6": {"index": 18,
                          "load_key": "cinn_alexnet_aae_fc6"},
-                 "fc7": {"index": 21,  # works
+                 "fc7": {"index": 21,
                          "load_key": "cinn_alexnet_aae_fc7"},
-                 "fc8": {"index": 22,  # works
+                 "fc8": {"index": 22,
                          "load_key": "cinn_alexnet_aae_fc8"},
                  "softmax": {"index": 23,
                              "load_key": "cinn_alexnet_aae_softmax"},

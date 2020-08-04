@@ -43,7 +43,7 @@ def get_cinn_state(gpu, name="cinn_alexnet_aae_conv5"):
     return state
 
 
-def visualize(ex, config):
+def visualize(example, config):
     layer_dir = {"conv5": {"index": 12,  # 10 is interesting, 12 works
                            "load_key": "cinn_alexnet_aae_conv5"},
                  "fc6": {"index": 18,

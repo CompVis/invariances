@@ -118,7 +118,10 @@ class AutoencoderConcatTrainer(Trainer):
         def eval_op():
             return self.eval_op_samples(xin, zae, zrep)
 
-        return {"train_op": train_op, "log_op": log_op, "eval_op": eval_op}
+        return {"train_op": train_op,
+                "log_op": log_op,
+                #"eval_op": eval_op   # TODO: add back in for release
+                }
 
 
 class VisualizeAttacks(AutoencoderConcatTrainer):

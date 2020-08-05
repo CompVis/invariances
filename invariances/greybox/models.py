@@ -144,22 +144,21 @@ class ResnetClassifier(AbstractGreybox):
                              ).model
 
         self.layers = nn.ModuleList()
-        # input:                           index  0      x
+        # input:                           index  0
         self.layers.append(model.conv1)         # 1
         self.layers.append(model.bn1)           # 2
         self.layers.append(model.relu)          # 3
-        self.layers.append(model.maxpool)       # 4      x
+        self.layers.append(model.maxpool)       # 4
         self.layers.append(model.layer1)        # 5
         self.layers.append(model.layer2)        # 6
-        self.layers.append(model.layer3)        # 7      x
+        self.layers.append(model.layer3)        # 7
         self.layers.append(model.layer4)        # 8
-        self.layers.append(model.avgpool)       # 9      x
+        self.layers.append(model.avgpool)       # 9
         self.layers.append(Flatten(1))          # 10
         self.layers.append(model.fc)            # 11
         if retrieve(config, "append_softmax", default=True):
             self.logger.info("Note: Appending Softmax as last layer in classifier.")
-            self.layers.append(nn.Softmax())    # 12     x
-        #self.logger.info("Layer Information: \n {}".format(self.layers))
+            self.layers.append(nn.Softmax())    # 12
 
     def encode(self, x):
         x = self._pre_process(x)
@@ -176,31 +175,6 @@ class ResnetClassifier(AbstractGreybox):
             x = self.layers[i](x)
         return x
 
-    def return_features(self, x):
-        """
-        TODO: not really necessary, remove?
-        returns intermediate features and logits. Could also add softmaxed class decisions.
-
-        For Resnet-101, the following sizes are returned (11 is batch-size and can be ignored,
-        the ones marked with an 'x' were used in the paper.):
-
-            torch.Size([11, 3, 224, 224])   ---  150528                                     x   input
-            torch.Size([11, 64, 112, 112])  ---  802816
-            torch.Size([11, 64, 112, 112])  ---  802816
-            torch.Size([11, 64, 112, 112])  ---  802816
-            torch.Size([11, 64, 56, 56])    ---  200704                                     x   maxpool
-            torch.Size([11, 256, 56, 56])   ---  802816                                         layer1
-            torch.Size([11, 512, 28, 28])   ---  401408                                         layer2
-            torch.Size([11, 1024, 14, 14])  ---  200704                                     x   layer3
-            torch.Size([11, 2048, 7, 7])    ---  100352                                         layer4
-            torch.Size([11, 2048, 1, 1])    ---  2048                                       x   avgpool
-            flatten...                                                                          flatten
-            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  logits                   fc
-            torch.Size([11, n_classes, 1, 1])     ---  n_classes  +++  softmaxed logits     x   softmax
-
-        """
-        raise NotImplementedError
-
     def _pre_process(self, x):
         x = self.image_transform(x)
         return x
@@ -212,4 +186,3 @@ class ResnetClassifier(AbstractGreybox):
     @property
     def std(self):
         return [0.229, 0.224, 0.225]
-

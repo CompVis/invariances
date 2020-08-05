@@ -47,7 +47,6 @@ class Embedder(nn.Module):
             self.feature_layers.append(FeatureLayer(scale, norm=norm))
         self.dense_encode = DenseEncoderLayer(n_down, bottleneck_size, emb_dim)
         if n_down == 1:
-            # add some extra parameters to make model a little more powerful ? # TODO
             print(" Warning: Embedder for ConditionalTransformer has only one down-sampling step. You might want to "
                   "increase its capacity.")
 
@@ -138,21 +137,6 @@ class ConditionalTransformer(nn.Module):
         model.load_state_dict(torch.load(ckpt, map_location=torch.device("cpu")))
         model.eval()
         return model
-
-
-class PretrainedModel(ConditionalTransformer):
-    # TODO: does this need to be a nn.Module?
-    def __init__(self, config):
-        pretrained_key = retrieve(config, "pretrained_key")
-        assert pretrained_key in CONFIG_MAP, 'The model under the provided key {} is not (yet) available.'.format(
-            pretrained_key)
-        self.model = ConditionalTransformer.from_pretrained(pretrained_key)
-
-    def __getattr__(self, name):
-        try:
-            return getattr(self.model, name)
-        except AttributeError:
-            return getattr(self, name)
 
 
 class Dummy:

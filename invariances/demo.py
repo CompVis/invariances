@@ -623,6 +623,7 @@ if __name__ == "__main__":
         example = dset[dataidx]
         texturebias(example, None)
     elif demo == "Visualization of Adversarial Attacks":
+        st.header("Visualization of Adversarial Attacks")
         dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
                                        "size": 128,
                                        "label_level": 2}})

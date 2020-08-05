@@ -48,7 +48,7 @@ the download progress displayed in the terminal running the streamlit command.
 To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
 run 
 ```
-streamlit run invariances/demo_visualization.py
+streamlit run invariances/demo.py
 ```
 
 ### Adversarial Attacks

@@ -140,9 +140,3 @@ class ResNet(nn.Module):
     @property
     def std(self):
         return [0.229, 0.224, 0.225]
-
-
-if __name__ == "__main__":
-    model1 = ResNet.from_pretrained("resnet101_animalfaces_shared")
-    model2 = ResNet.from_pretrained("resnet101_animalfaces_10")
-    print("done.")

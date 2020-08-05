@@ -60,6 +60,8 @@ We provide demonstrations on
 Note that all of the provided demos can be run without a dataset, and you can add 
 your own images into `data/custom`.
 
+![teaser](data/demoteaser.gif)
+
 ## Training
 
 ### Data

@@ -39,20 +39,25 @@ Optionally, you can then also `conda install tensorflow-gpu=1.14` to speed up
 FID evaluations.
 
 ## Demos
-To get started you can directly dive into some demos. Please note that
-checkpoints will be downloaded on demand, which can take a while. You can see
-the download progress displayed in the terminal running the streamlit command.
-Note that the demonstration scripts are highly customizable, and you can add 
-your own images into `data/custom`.
-### Feature Visualization
-To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
-run 
+To get started you can directly dive into some demos. After installing the requirements as described
+above, simply run
 ```
 streamlit run invariances/demo.py
 ```
 
-### Adversarial Attacks
-coming soon
+Please note that checkpoints will be downloaded on demand, which can take a while. You can see
+the download progress displayed in the terminal running the streamlit command. 
+
+We provide demonstrations on
+- visualizations of adversarial attacks
+- visualizations on network representations and their invariances
+- the texture bias of *ImageNet*-CNNs
+- image mixing via their network representations
+- visualizations of invariances from a video (also video translation with a single example) 
+
+Note that all of the provided demos can be run without a dataset, and you can add 
+your own images into `data/custom`.
+
 
 ## Data
 If not present on your disk, all required datasets (*ImageNet*, *AnimalFaces* and *ImageNetAnimals*)

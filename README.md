@@ -16,13 +16,13 @@ Table of Contents
 
 * [Requirements](#requirements)
 * [Demos](#demos)
-* [Data](#data)
 * [Training](#training)
-   * [Conditional INNs](#conditional-inns)
-   * [Invertible Interpretation Networks](#invertible-interpretation-networks)
+   * [Data](#data)
+   * [Invariances of Classifiers](#invariances-of-classifiers)
+      * [ResNet](#resnet)
+      * [AlexNet](#alexnet)
 * [Evaluation](#evaluation)
 * [Pretrained Models](#pretrained-models)
-* [Results](#results)
 * [BibTeX](#bibtex)
 
 
@@ -44,17 +44,24 @@ checkpoints will be downloaded on demand, which can take a while. You can see
 the download progress displayed in the terminal running the streamlit command.
 Note that the demonstration scripts are highly customizable, and you can add 
 your own images into `data/custom`.
-### Feature Visualization
-To run a interactive demo that allows to visualize representations and their invariances of AlexNet,
-run 
+
+Run the demos with
+
 ```
 streamlit run invariances/demo.py
 ```
 
-### Adversarial Attacks
-coming soon
+You can then select between the following demos:
 
-## Data
+- Visualization of Adversarial Attacks
+- Visualization of Network Representations
+- Revealing Texture Bias
+- Visualizing Invariances from a Video
+- Image Mixing
+
+## Training
+
+### Data
 If not present on your disk, all required datasets (*ImageNet*, *AnimalFaces* and *ImageNetAnimals*)
  will be downloaded and prepared automatically. The data processing and loading rely on the
   [autoencoders](https://github.com/edflow/autoencoders) package and are described in more detail 
@@ -63,7 +70,6 @@ If not present on your disk, all required datasets (*ImageNet*, *AnimalFaces* an
   **Note:** If you already have one or more of the datasets present, follow the instructions linked 
   above to avoid downloading them again.
  
-## Training
 
 ### Invariances of Classifiers
 
@@ -122,10 +128,10 @@ use in a demo, training or evaluation script.
 ## BibTeX
 
 ```
-@inproceedings{esser2020invertible,
-  title={A Disentangling Invertible Interpretation Network for Explaining Latent Representations},
-  author={Esser, Patrick and Rombach, Robin and Ommer, Bj{\"o}rn},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+@inproceedings{rombach2020invariances,
+  title={Making Sense of CNNs: Interpreting Deep Representations \& Their Invariances with INNs},
+  author={Rombach, Robin and Esser, Patrick and Ommer, Bj{\"o}rn},
+  booktitle={Proceedings of the European Conference on Computer Vision},
   year={2020}
 }
 ```

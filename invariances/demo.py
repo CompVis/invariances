@@ -9,6 +9,7 @@ import autoencoders
 from autoencoders.models.bigae import BigAE
 from autoencoders.data import Folder
 
+from invariances.data import LabelFolder
 from invariances.util.ckpt_util import URL_MAP
 from invariances.util.label_util import ANIMALFACES10_TO_HUMAN
 from invariances.model.cinn import ConditionalTransformer
@@ -585,8 +586,6 @@ if __name__ == "__main__":
         visualize(example, None)
     elif demo == "Image Mixing":
         st.header("Image Mixing via Their Invariances")
-
-        from invariances.data import LabelFolder
         dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
                                        "size": 128,
                                        "label_level": 2}})
@@ -599,19 +598,17 @@ if __name__ == "__main__":
         recombine(example, None)
     elif demo == "Visualizing Invariances from a Video":
         st.header("Visualizing Invariances from a Video")
-        dset = Folder({
-            "Folder":{
-                "folder": "data/custom",
-                "size": 128}
-        })
+        dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
+                                       "size": 128,
+                                       "label_level": 2}})
 
         st.set_option('deprecation.showfileUploaderEncoding', False)
 
-        dataidx = st.slider("Example", 0, len(dset)-1, 0)
+        dataidx = st.slider("Example", 0, len(dset)-1, 618)
         example = dset[dataidx]
         video = st.file_uploader("Driving Video", type=["mp4", "mkv", "avi"])
         if video is None:
-            video = open("data/shortlion.mp4", "rb")
+            video = open("data/doggo2short02.mp4", "rb")
         reader = imageio.get_reader(video, "ffmpeg")
         video_demo(example, reader)
     elif demo == "Revealing Texture Bias":
@@ -626,7 +623,6 @@ if __name__ == "__main__":
         example = dset[dataidx]
         texturebias(example, None)
     elif demo == "Visualization of Adversarial Attacks":
-        from invariances.data import LabelFolder
         dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
                                        "size": 128,
                                        "label_level": 2}})

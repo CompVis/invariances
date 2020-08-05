@@ -71,9 +71,9 @@ class ResNet(nn.Module):
         if custom_head:
             self.model.fc = nn.Linear(self.model.fc.in_features, self.n_out)
 
-        if type in ["resnet50stylized"]:
+        if self.type in ["resnet50stylized"]:
             self.logger.info("Loading pretrained Resnet-50 trained on stylized ImageNet")
-            which_stylized = retrieve(self.config, "Model/whichstyle",
+            which_stylized = retrieve(config, "Model/whichstyle",
                                       default="resnet50_trained_on_SIN")
 
             self.logger.info("Loading {} from url {}".format(which_stylized, STYLE_MODEL_URLS[which_stylized]))

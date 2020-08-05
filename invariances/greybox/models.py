@@ -88,7 +88,7 @@ class AlexNetClassifier(AbstractGreybox):
         if retrieve(config, "append_softmax", default=True):
             self.layers.append(nn.Softmax())
             assert len(self.layers) == 23
-        self.logger.info("Layer Information: \n {}".format(self.layers))
+        #self.logger.info("Layer Information: \n {}".format(self.layers))
         del model  # don't need this hanging around
 
     def encode(self, x):
@@ -159,7 +159,7 @@ class ResnetClassifier(AbstractGreybox):
         if retrieve(config, "append_softmax", default=True):
             self.logger.info("Note: Appending Softmax as last layer in classifier.")
             self.layers.append(nn.Softmax())    # 12     x
-        self.logger.info("Layer Information: \n {}".format(self.layers))
+        #self.logger.info("Layer Information: \n {}".format(self.layers))
 
     def encode(self, x):
         x = self._pre_process(x)

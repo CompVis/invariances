@@ -9,6 +9,8 @@ URL_MAP = {
     "cinn_alexnet_aae_fc7": "https://heibox.uni-heidelberg.de/f/050d4d76f3cf4eeeb9b6/?dl=1",
     "cinn_alexnet_aae_fc8": "https://heibox.uni-heidelberg.de/f/cb9c93497aae4e97890c/?dl=1",
     "cinn_alexnet_aae_softmax": "https://heibox.uni-heidelberg.de/f/5a30088c51b44cc58bbe/?dl=1",
+    "cinn_stylizedresnet_avgpool": "https://heibox.uni-heidelberg.de/f/7a54929dee4544248020/?dl=1",
+    "cinn_resnet_avgpool": "https://heibox.uni-heidelberg.de/f/d31717bb225b4692bbb3/?dl=1",
     "resnet101_animalfaces_shared": "https://heibox.uni-heidelberg.de/f/a2c36d628f574ed8aa68/?dl=1",
     "resnet101_animalfaces_10": "https://heibox.uni-heidelberg.de/f/314926cb0d754cd9bb02/?dl=1",
 }
@@ -19,6 +21,8 @@ CKPT_MAP = {
     "cinn_alexnet_aae_fc7": "invariances/pretrained_models/cinns/alexnet/fc7.ckpt",
     "cinn_alexnet_aae_fc8": "invariances/pretrained_models/cinns/alexnet/fc8.ckpt",
     "cinn_alexnet_aae_softmax": "invariances/pretrained_models/cinns/alexnet/softmax.ckpt",
+    "cinn_stylizedresnet_avgpool": "invariances/pretrained_models/cinns/stylized_resnet50/avgpool.ckpt",
+    "cinn_resnet_avgpool": "invariances/pretrained_models/cinns/resnet50/avgpool.ckpt",
     "resnet101_animalfaces_shared": "invariances/pretrained_models/classifiers/resnet101/animalfaces149_modelub_16908.ckpt",
     "resnet101_animalfaces_10": "invariances/pretrained_models/classifiers/resnet101/animalfaces10_modelub_6118.ckpt",
 }
@@ -29,6 +33,8 @@ MD5_MAP = {
     "cinn_alexnet_aae_fc7": "342ab8f9280ed83f30150e586c7df13b",
     "cinn_alexnet_aae_fc8": "ce6b5bfc316a855693b7e1808d6f3a46",
     "cinn_alexnet_aae_softmax": "15fbdd0d8d51ba0031fbc07ebf0ba2f6",
+    "cinn_stylizedresnet_avgpool": "0dd3f262a8179920d77db7404a599e35",
+    "cinn_resnet_avgpool": "c956206cadc928febfa7c940425f2edd",
     "resnet101_animalfaces_shared": "784b6b52eb30341484b5fb69e3b9ae60",
     "resnet101_animalfaces_10": "473cd4c25e7dedf87967489992498f06",
 }
@@ -115,6 +121,32 @@ CONFIG_MAP = {
             "mid_channels": 1024,
             "n_flows": 20,
             "conditioning_in_channels": 1000,
+            "conditioning_spatial_size": 1,
+            "embedder_down": 3,
+            }
+        },
+    "cinn_stylizedresnet_avgpool":
+        {"Transformer": {
+            "activation": "none",
+            "conditioning_option": "none",
+            "hidden_depth": 2,
+            "in_channels": 268,
+            "mid_channels": 1024,
+            "n_flows": 20,
+            "conditioning_in_channels": 2048,
+            "conditioning_spatial_size": 1,
+            "embedder_down": 3,
+            }
+        },
+    "cinn_resnet_avgpool":
+        {"Transformer": {
+            "activation": "none",
+            "conditioning_option": "none",
+            "hidden_depth": 2,
+            "in_channels": 268,
+            "mid_channels": 1024,
+            "n_flows": 20,
+            "conditioning_in_channels": 2048,
             "conditioning_spatial_size": 1,
             "embedder_down": 3,
             }

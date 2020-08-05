@@ -39,25 +39,26 @@ Optionally, you can then also `conda install tensorflow-gpu=1.14` to speed up
 FID evaluations.
 
 ## Demos
-To get started you can directly dive into some demos. Please note that
-checkpoints will be downloaded on demand, which can take a while. You can see
-the download progress displayed in the terminal running the streamlit command.
-Note that the demonstration scripts are highly customizable, and you can add 
-your own images into `data/custom`.
-
-Run the demos with
+To get started you can directly dive into some demos. After installing the requirements as described
+above, simply run
 
 ```
 streamlit run invariances/demo.py
 ```
 
-You can then select between the following demos:
+Please note that checkpoints will be downloaded on demand, which can take a while. You can see
+the download progress displayed in the terminal running the streamlit command. 
 
-- Visualization of Adversarial Attacks
-- Visualization of Network Representations
-- Revealing Texture Bias
-- Visualizing Invariances from a Video
-- Image Mixing
+We provide demonstrations on
+
+- visualization of adversarial attacks
+- visualization of network representations and their invariances
+- revealing the texture bias of *ImageNet*-CNNs
+- visualizing invariances from a video (resulting in image to video translation)
+- image mixing via their network representations
+
+Note that all of the provided demos can be run without a dataset, and you can add 
+your own images into `data/custom`.
 
 ## Training
 

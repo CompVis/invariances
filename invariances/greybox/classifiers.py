@@ -71,9 +71,9 @@ class ResNet(nn.Module):
         if custom_head:
             self.model.fc = nn.Linear(self.model.fc.in_features, self.n_out)
 
-        if type in ["resnet50stylized"]:
+        if self.type in ["resnet50stylized"]:
             self.logger.info("Loading pretrained Resnet-50 trained on stylized ImageNet")
-            which_stylized = retrieve(self.config, "Model/whichstyle",
+            which_stylized = retrieve(config, "Model/whichstyle",
                                       default="resnet50_trained_on_SIN")
 
             self.logger.info("Loading {} from url {}".format(which_stylized, STYLE_MODEL_URLS[which_stylized]))
@@ -141,8 +141,3 @@ class ResNet(nn.Module):
     def std(self):
         return [0.229, 0.224, 0.225]
 
-
-if __name__ == "__main__":
-    model1 = ResNet.from_pretrained("resnet101_animalfaces_shared")
-    model2 = ResNet.from_pretrained("resnet101_animalfaces_10")
-    print("done.")

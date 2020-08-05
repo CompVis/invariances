@@ -467,10 +467,12 @@ def visualize_attacks(example, config):
     # prepare attack
     xin.requires_grad = True
     original_logits = resnet_classifier(xin)
-    cls = torch.tensor([example["class_label"]]).long()
+    predicted_class_original = torch.argmax(original_logits)
+    cls = torch.tensor([predicted_class_original]).long()
+    predicted_class_original = ANIMALFACES10_TO_HUMAN[predicted_class_original.item()]
+
     if gpu:
         cls = cls.cuda()
-    human_label = example["human_label"]
 
     # attack
     attackor = AttackFGSM()
@@ -523,9 +525,6 @@ def visualize_attacks(example, config):
         outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
 
     # analysis of attack
-    true_class = ANIMALFACES10_TO_HUMAN[cls.item()]
-    predicted_class_original = torch.argmax(original_logits).item()
-    predicted_class_original = ANIMALFACES10_TO_HUMAN[predicted_class_original]
     with torch.no_grad():
         attacked_logits = resnet_classifier(attacked_image)
     predicted_class_attacked = torch.argmax(attacked_logits).item()
@@ -535,7 +534,7 @@ def visualize_attacks(example, config):
     atta_noise = rescale(attacked_noise.cpu().detach().numpy().transpose(0, 2, 3, 1))
     atta_img = rescale(attacked_image.cpu().detach().numpy().transpose(0, 2, 3, 1))
     input_plus_attack = np.concatenate((rescale(original_image)[None, :, :, :], atta_noise, atta_img))
-    st.write("__{}__ $+$ Attack $=$ Attacked Image".format(true_class))
+    st.write("Input $+$ Attack $=$ Attacked Image")
     st.image(input_plus_attack)
     st.write("Predicted from Original: __{}__".format(predicted_class_original))
     st.write("Predicted from Attacked Image: __{}__".format(predicted_class_attacked))
@@ -585,14 +584,15 @@ if __name__ == "__main__":
         example = dset[dataidx]
         visualize(example, None)
     elif demo == "Image Mixing":
-        dset = Folder({
-            "Folder":{
-                "folder": "data/custom",
-                "size": 128}
-        })
+        st.header("Image Mixing via Their Invariances")
 
-        dataidx1 = st.slider("Example 1", 0, len(dset)-1, 5)
-        dataidx2 = st.slider("Example 2", 0, len(dset)-1, 6)
+        from invariances.data import LabelFolder
+        dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
+                                       "size": 128,
+                                       "label_level": 2}})
+
+        dataidx1 = st.slider("Example 1", 0, len(dset)-1, 97)
+        dataidx2 = st.slider("Example 2", 0, len(dset)-1, 587)
         example1 = dset[dataidx1]
         example2 = dset[dataidx2]
         example = {"example1": example1, "example2": example2}
@@ -626,9 +626,10 @@ if __name__ == "__main__":
         example = dset[dataidx]
         texturebias(example, None)
     elif demo == "Visualization of Adversarial Attacks":
-        # TODO
-        from autoencoders.data import AnimalFacesRestrictedTest
-        dset = AnimalFacesRestrictedTest({"size":128})
-        dataidx = st.slider("data index", 0, len(dset)-1, 0)
+        from invariances.data import LabelFolder
+        dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",
+                                       "size": 128,
+                                       "label_level": 2}})
+        dataidx = st.slider("data index", 0, len(dset)-1, 18)
         example = dset[dataidx]
         visualize_attacks(example, None)

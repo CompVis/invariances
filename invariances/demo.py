@@ -611,7 +611,7 @@ if __name__ == "__main__":
         example = dset[dataidx]
         video = st.file_uploader("Driving Video", type=["mp4", "mkv", "avi"])
         if video is None:
-            video = open("data/vid.mkv", "rb")
+            video = open("data/shortlion.mp4", "rb")
         reader = imageio.get_reader(video, "ffmpeg")
         video_demo(example, reader)
     elif demo == "Revealing Texture Bias":

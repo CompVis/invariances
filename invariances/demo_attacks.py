@@ -1,13 +1,15 @@
 import torch
 import streamlit as st
 import numpy as np
+from streamlit import caching
 # from edflow.util.edexplore import isimage, st_get_list_or_dict_item
 from autoencoders.models.bigae import BigAE
 
-from invariances.util.ckpt_util import URL_MAP, CONFIG_MAP
+from invariances.util.ckpt_util import URL_MAP
+from invariances.util.label_util import ANIMALFACES10_TO_HUMAN
 from invariances.model.cinn import ConditionalTransformer
 from invariances.greybox.models import ResnetClassifier
-from invariances.greybox.classifiers import ResNet
+
 
 rescale = lambda x: (x + 1.) / 2.
 
@@ -39,7 +41,8 @@ def get_resnet_state(gpu, split_idx, pretrained_key="resnet101_animalfaces_10"):
 
 
 @st.cache(allow_output_mutation=True)
-def get_cinn_state(gpu, name="cinn_resnet_animalfaces_ae_input"):
+def get_cinn_state(gpu, name="cinn_resnet_animalfaces10_ae_layer2"):
+    caching.clear_cache()
     assert name in URL_MAP
     model = ConditionalTransformer.from_pretrained(name)
     if gpu:
@@ -77,40 +80,38 @@ class AttackFGSM(object):
         return perturbed_image, sign_data_grad
 
 
-
 def visualize(example, config):
-    # TODO: need the keys for the trained models here.
-    # TODO: what about the softmax appendix?
     layer_dir = {"input": {"index": 0,
-                           "load_key": "cinn_alexnet_aae_conv5"},
+                           "load_key": "cinn_resnet_animalfaces10_ae_input"},
                  "maxpool": {"index": 4,
                              "load_key": "cinn_resnet_animalfaces10_ae_maxpool"},
                  "layer1": {"index": 5,
-                             "load_key": "cinn_alexnet_aae_fc7"},
+                             "load_key": "cinn_resnet_animalfaces10_ae_layer1"},
                  "layer2": {"index": 6,
-                             "load_key": "cinn_alexnet_aae_fc8"},
+                             "load_key": "cinn_resnet_animalfaces10_ae_layer2"},
                  "layer3": {"index": 7,
-                             "load_key": "cinn_alexnet_aae_softmax"},
+                             "load_key": "cinn_resnet_animalfaces10_ae_layer3"},
                  "layer4": {"index": 8,
-                            "load_key": "cinn_alexnet_aae_softmax"},
+                            "load_key": "cinn_resnet_animalfaces10_ae_layer4"},
                  "avgpool": {"index": 9,
-                            "load_key": "cinn_alexnet_aae_softmax"},
+                            "load_key": "cinn_resnet_animalfaces10_ae_avgpool"},
                  "fc": {"index": 11,
-                             "load_key": "cinn_alexnet_aae_softmax"},
+                             "load_key": "cinn_resnet_animalfaces10_ae_fc"},
                  "softmax": {"index": 12,
-                            "load_key": "cinn_alexnet_aae_softmax"},
+                            "load_key": "cinn_resnet_animalfaces10_ae_softmax"},
                  }
 
-    st.write("Options")
-    eps = float(st.sidebar.text_input("fgsm_epsilon", 0.1))
+    st.sidebar.text("Options")
+    eps = float(st.sidebar.text_input("fgsm_epsilon", 0.02))
     if torch.cuda.is_available():
-        gpu = st.checkbox("gpu", value=True)
+        gpu = st.sidebar.checkbox("gpu", value=True)
     else:
         gpu = False
 
-    #cinn_layer = st.selectbox("Which layer do you want to visualize?", ("input", "maxpool", "layer1", "layer2",
-    #                                                                    "layer3", "layer4", "avgpool", "fc", "softmax"))
-    cinn_layer = "maxpool"
+    cinn_layer = st.sidebar.selectbox("Which layer do you want to visualize?", ("maxpool", "layer1", "layer2",
+                                                                                "layer3", "layer4", "avgpool",
+                                                                                "fc", "softmax"))
+
     # prepare models
     ae_model = get_ae_state(gpu=gpu, name="animalfaces")["model"]
     cinn_model = get_cinn_state(gpu, layer_dir[cinn_layer]["load_key"])["model"]
@@ -118,7 +119,6 @@ def visualize(example, config):
     resnet_greybox = get_resnet_state(gpu, layer_dir[cinn_layer]["index"])["greybox"]
     resnet_classifier = get_resnet_state(gpu, layer_dir[cinn_layer]["index"])["classifier"]   # used for the attack
 
-    # image, image_key = st_get_list_or_dict_item(ex, "image", description="input image", filter_fn=isimage)
     original_image = example["image"]
     xin = torch.tensor(original_image)[None, ...].transpose(3, 2).transpose(2, 1).float()
     if gpu:
@@ -133,9 +133,6 @@ def visualize(example, config):
     if gpu:
         cls = cls.cuda()
     human_label = example["human_label"]
-
-    print(cls.shape)
-    print(human_label)
 
     # attack
     attackor = AttackFGSM()
@@ -166,7 +163,7 @@ def visualize(example, config):
     # swap conditioning to noisy one
     noisy_z_ae = cinn_model.reverse(original_ss_z, noisy_z)
 
-    num_samples = st.slider("number of samples", 2, 8, 4)
+    num_samples = st.sidebar.slider("number of samples", 2, 6, 3)
     outputs = {"reconstruction": ae_model.decode(original_z_ae),
                "reconstruction_original_z": ae_model.decode(recovered_z_ae),
                "reconstruction_attacked_z": ae_model.decode(attacked_z_ae),
@@ -182,29 +179,46 @@ def visualize(example, config):
         return outputs
 
     outputs = sample()
-    if st.checkbox("Resample Visualizations"):
+    if st.sidebar.button("Resample Visualizations"):
         outputs = sample()
     for k in outputs:
         outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
 
-    xrec = rescale(outputs["reconstruction"])
-    xrec_original_z = rescale(outputs["reconstruction_original_z"])
-    xrec_attacked_z = rescale(outputs["reconstruction_attacked_z"])
-    xrec_noisy_z = rescale(outputs["reconstruction_noisy_z"])
-    inrec = np.concatenate((rescale(original_image)[None, :, :, :], xrec, xrec_original_z, xrec_attacked_z,
-                            xrec_noisy_z))
-    st.write("Input [{}] & Reconstructions (AE, original z, attacked z, noisy z)".format(human_label))
-    st.image(inrec)
+    # analysis of attack
+    true_class = ANIMALFACES10_TO_HUMAN[cls.item()]
+    predicted_class_original = torch.argmax(original_logits).item()
+    predicted_class_original = ANIMALFACES10_TO_HUMAN[predicted_class_original]
+    with torch.no_grad():
+        attacked_logits = resnet_classifier(attacked_image)
+    predicted_class_attacked = torch.argmax(attacked_logits).item()
+    predicted_class_attacked = ANIMALFACES10_TO_HUMAN[predicted_class_attacked]
+
+    # plot of attack
+    atta_noise = rescale(attacked_noise.cpu().detach().numpy().transpose(0, 2, 3, 1))
+    atta_img = rescale(attacked_image.cpu().detach().numpy().transpose(0, 2, 3, 1))
+    input_plus_attack = np.concatenate((rescale(original_image)[None, :, :, :], atta_noise, atta_img))
+    st.write("__{}__ $+$ Attack $=$ Attacked Image".format(true_class))
+    st.image(input_plus_attack)
+    st.write("Predicted from Original: __{}__".format(predicted_class_original))
+    st.write("Predicted from Attacked Image: __{}__".format(predicted_class_attacked))
+
+    # display the reconstructions
+    st.text("What a human/the network sees:               (+ sanity check: AE reconstruction)")
+    recons = np.concatenate((atta_img,
+                             rescale(outputs["reconstruction_attacked_z"]),
+                             np.ones_like(atta_img),
+                             rescale(outputs["reconstruction_original_z"])
+                             ))
+    st.image(recons)
 
     # concat the samples, then display
     samples_original = np.concatenate([rescale(outputs["sample_original{}".format(n)]) for n in range(num_samples)])
-    st.write("Samples Original")
+    st.write("Samples conditioned on original network representation")
     st.image(samples_original)
 
     samples_attacked = np.concatenate([rescale(outputs["sample_attacked{}".format(n)]) for n in range(num_samples)])
-    st.write("Samples Attacked")
+    st.write("Samples conditioned on attacked network representation")
     st.image(samples_attacked)
-
 
 if __name__ == "__main__":
     from autoencoders.data import AnimalFacesRestrictedTest

@@ -9,7 +9,7 @@ PyTorch code accompanying the [ECCV 2020](https://eccv2020.eu/) paper
 \* equal contribution
 
 ![teaser](data/overview.png)<br/>
-[arXiv](https://arxiv.org/) | [BibTeX](#bibtex) | [Project Page](https://compvis.github.io/invariances/)
+[arXiv](https://arxiv.org/abs/2008.01777) | [BibTeX](#bibtex) | [Project Page](https://compvis.github.io/invariances/)
 
 Table of Contents
 =================
@@ -59,6 +59,8 @@ We provide demonstrations on
 
 Note that all of the provided demos can be run without a dataset, and you can add 
 your own images into `data/custom`.
+
+![teaser](data/demoteaser.gif)
 
 ## Training
 

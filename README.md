@@ -9,7 +9,7 @@ PyTorch code accompanying the [ECCV 2020](https://eccv2020.eu/) paper
 \* equal contribution
 
 ![teaser](data/overview.png)<br/>
-[arXiv](https://arxiv.org/) | [BibTeX](#bibtex) | [Project Page](https://compvis.github.io/invariances/)
+[arXiv](https://arxiv.org/abs/2008.01777) | [BibTeX](#bibtex) | [Project Page](https://compvis.github.io/invariances/)
 
 Table of Contents
 =================

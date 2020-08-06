@@ -67,7 +67,9 @@ and image modifications.
 
                     <div class="image fit captioned align-center"
                                 style="margin-bottom:0em; box-shadow:0 0">
-                      <!--TODO-->
+                      <h1>
+                        Paper
+                      </h1>
                       <a href="https://arxiv.org/pdf/2008.01777.pdf">
                         <img src="images/paper.jpg" alt="" style="border:1px solid black"/>
                       </a>
@@ -78,6 +80,19 @@ and image modifications.
                       <a href="https://github.com/CompVis/invariances">GitHub</a>
                       <br/>
                       &ast; equal contribution
+                      <hr/>
+                      <h1>
+                        Demo
+                      </h1>
+                      <a href="https://github.com/CompVis/invariances">
+                        <img src="images/demoteaser.gif" alt="" style="border:1px solid black"/>
+                      </a>
+                      <pre class="code">
+git clone https://github.com/CompVis/invariances.git
+cd invariances
+conda env create -f environment.yaml
+conda activate invariances
+streamlit run invariances/demo.py</pre>
                     </div>
 
                   </div>

@@ -3320,3 +3320,20 @@
     width: 100%;
     height: 100%;
 }
+.code {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-left: 2px solid #000;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 8pt;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+    text-align: left;
+}

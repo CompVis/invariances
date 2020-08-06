@@ -68,13 +68,11 @@ and image modifications.
                     <div class="image fit captioned align-center"
                                 style="margin-bottom:0em; box-shadow:0 0">
                       <!--TODO-->
-                      <a href="https://arxiv.org/">
+                      <a href="https://arxiv.org/pdf/2008.01777.pdf">
                         <img src="images/paper.jpg" alt="" style="border:1px solid black"/>
                       </a>
-                      <!--TODO
-                      <a href="https://arxiv.org/abs/">arXiv</a>
+                      <a href="https://arxiv.org/abs/2008.01777">arXiv</a>
                       <div class="headerDivider"></div>
-                      -->
                       <a href="images/invariances.bib">BibTeX</a>
                       <div class="headerDivider"></div>
                       <a href="https://github.com/CompVis/invariances">GitHub</a>

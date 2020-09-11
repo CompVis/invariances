@@ -70,7 +70,8 @@ def get_cinn_state(gpu, name="cinn_alexnet_aae_conv5"):
     return state
 
 
-def visualize(example, config):
+@torch.no_grad()
+def visualize(dset, config):
     layer_dir = {"conv5": {"index": 12,
                            "load_key": "cinn_alexnet_aae_conv5"},
                  "fc6": {"index": 18,
@@ -82,6 +83,22 @@ def visualize(example, config):
                  "softmax": {"index": 23,
                              "load_key": "cinn_alexnet_aae_softmax"},
                  }
+
+    dataidx = st.slider("Example", 0, len(dset) - 1, len(dset) - 1)
+    example = dset[dataidx]
+
+    def build_batch(n_samples):
+        # build batch:
+        x = []
+        for n in range(n_samples):
+            idx = np.random.choice(np.arange(0, len(dset)))
+            image = dset[idx]["image"]
+            xin = torch.tensor(image)[None, ...].transpose(3, 2).transpose(2, 1).float()
+            x.append(xin)
+        xin = torch.cat(x)
+        if gpu:
+            xin = xin.cuda()
+        return xin
 
     st.sidebar.text("Options")
     if torch.cuda.is_available():
@@ -105,7 +122,7 @@ def visualize(example, config):
     zae = ae_model.encode(xin).sample()
     zz, _ = cinn_model(zae, zrep)
 
-    num_samples = st.sidebar.slider("number of samples", 2, 16, 8)
+    num_samples = st.sidebar.slider("number of samples", 4, 20, 8)
     st.sidebar.button("Resample Visualizations")
 
     outputs = {"reconstruction": ae_model.decode(zae)}
@@ -118,11 +135,36 @@ def visualize(example, config):
         return outputs
 
     outputs = sample()
+
+    z_rep_fixed = zrep.repeat(zrep.shape[0], 1, 1, 1)
+    z_re = torch.cat([alex_model.encode(outputs[k]).sample() for k in outputs])
+    # get a reference batch
+    x_in = build_batch(num_samples)
+    z_ref = torch.cat([alex_model.encode(x[None, ...]).sample() for x in x_in])
+
+    distance_re_l2 = torch.sqrt(torch.sum(torch.pow(z_rep_fixed - z_re, 2), dim=[1, 2, 3]))
+    distance_intra_l2 = torch.sqrt(
+        torch.sum(torch.pow(z_ref - z_ref[torch.randperm(z_ref.shape[0])], 2), dim=[1, 2, 3]))
+    distance_re_cos = nn.functional.cosine_similarity(z_rep_fixed.reshape(z_rep_fixed.shape[0], -1),
+                                                      z_re.reshape(z_re.shape[0], -1))
+    distance_intra_cos = nn.functional.cosine_similarity(z_ref.reshape(z_ref.shape[0], -1),
+                                                         z_ref[torch.randperm(z_ref.shape[0])].reshape(z_ref.shape[0],-1))
+
+    #st.write("Re-Encodings $L_2$ distance: {:.2f} +/- {:.2f}".format(distance_re_l2.mean(), distance_re_l2.std()))
+    #st.write("(reference: intra batch $L_2$ distance: {:.2f} +/- {:.2f})".format(distance_intra_l2.mean(),
+    #                                                                             distance_intra_l2.std()))
+    st.write("_________________________________________________")
+    st.write("re-encodings of cINN samples: *cosine similarity* in **{}** feature space: {:.2f} +/- {:.2f}".format(cinn_layer, distance_re_cos.mean(), distance_re_cos.std()))
+    st.write("(compare as a reference: intra batch *cosine similarity* in **{}** feature space: {:.2f} +/- {:.2f})".format(cinn_layer, distance_intra_cos.mean(),
+                                                                                                              distance_intra_cos.std()))
+    st.write("_________________________________________________")
+
     for k in outputs:
         outputs[k] = outputs[k].detach().cpu().numpy().transpose(0, 2, 3, 1)
 
     xrec = rescale(outputs["reconstruction"])
     inrec = np.concatenate((rescale(image)[None, :, :, :], xrec))
+
     st.write("Input & Autoencoder Reconstruction")
     st.image(inrec)
 
@@ -492,6 +534,8 @@ def visualize_attacks(example, config):
 
     # encode original image with autoencoder
     original_z_ae = ae_model.encode(xin).sample()
+    # encode attacked image with autoencoder
+    attacked_z_ae_direct = ae_model.encode(attacked_image).sample()
 
     # flow it into second stage z ss_z conditioned on original
     # representation
@@ -508,7 +552,8 @@ def visualize_attacks(example, config):
     outputs = {"reconstruction": ae_model.decode(original_z_ae),
                "reconstruction_original_z": ae_model.decode(recovered_z_ae),
                "reconstruction_attacked_z": ae_model.decode(attacked_z_ae),
-               "reconstruction_noisy_z": ae_model.decode(noisy_z_ae)}
+               "reconstruction_noisy_z": ae_model.decode(noisy_z_ae),
+               "direct_reconstruction_attacked_z": ae_model.decode(attacked_z_ae_direct)}
 
     def sample():
         for n in range(num_samples):
@@ -541,11 +586,12 @@ def visualize_attacks(example, config):
     st.write("Predicted from Attacked Image: __{}__".format(predicted_class_attacked))
 
     # display the reconstructions
-    st.text("What a human/the network sees:               (+ sanity check: AE reconstruction)")
+    st.text("What a human/the network sees:               (+ sanity check: AE reconstruction of attack)")
     recons = np.concatenate((atta_img,
                              rescale(outputs["reconstruction_attacked_z"]),
                              np.ones_like(atta_img),
-                             rescale(outputs["reconstruction_original_z"])
+                             #rescale(outputs["reconstruction_original_z"]),
+                             rescale(outputs["direct_reconstruction_attacked_z"])
                              ))
     st.image(recons)
 
@@ -581,9 +627,8 @@ if __name__ == "__main__":
                 "size": 128}
         })
 
-        dataidx = st.slider("Example", 0, len(dset)-1, len(dset)-1)
-        example = dset[dataidx]
-        visualize(example, None)
+        visualize(dset, None)
+
     elif demo == "Image Mixing":
         st.header("Image Mixing via Their Invariances")
         dset = LabelFolder({"Folder": {"folder": "data/animalfaces10",

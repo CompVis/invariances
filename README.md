@@ -39,6 +39,8 @@ Optionally, you can then also `conda install tensorflow-gpu=1.14` to speed up
 FID evaluations.
 
 ## Demos
+![teaser](data/demoteaser.gif)
+
 To get started you can directly dive into some demos. After installing the requirements as described
 above, simply run
 
@@ -59,8 +61,6 @@ We provide demonstrations on
 
 Note that all of the provided demos can be run without a dataset, and you can add 
 your own images into `data/custom`.
-
-![teaser](data/demoteaser.gif)
 
 ## Training
 
